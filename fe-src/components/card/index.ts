@@ -22,15 +22,25 @@ customElements.define(
           box-sizing: border-box;
         }
   
-        .header {
+        .card {
           background-color: rgb(55, 55, 55);
-          width: 100%;
-          height: 50px;
-        
+          width: 300px;
+          height: 250px;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
-          padding: 0 10px;
+          flex-direction: column;
+          row-gap: 30px;
+        }
+
+        .card_img {
+          width: 163px;
+        }
+
+        .card_info {
+          display: flex;
+          column-gap: 44px;
+          color: white;
         }
         `;
 
@@ -38,27 +48,27 @@ customElements.define(
     }
 
     addListeners() {
-      const menuEl = this.shadow.querySelector(
-        ".header_menu-container"
+      const reportButtonEl = this.shadow.querySelector(
+        ".report-button"
       ) as HTMLButtonElement;
 
-      menuEl.addEventListener("click", (e) => {});
+      reportButtonEl.addEventListener("click", (e) => {});
     }
 
     render() {
-      const logoImg = require("../../images/logo.svg");
-      const menuImg = require("../../images/menu.svg");
+      const mainImg = require("../../images/undraw_beach_day_cser 1.svg");
 
       this.shadow.innerHTML = `
-          <header class="header">
-              <div class="header_logo-container">
-                  <img class="header_logo-img" src="${logoImg}" alt="logo.svg" />
-              </div>
-  
-              <div class="header_menu-container">
-                  <img src="${menuImg}" alt="logo.svg" />
-              </div>
-          </header>
+      <div class="card">
+        <img class="card_img" src="${mainImg}" alt="logo.svg" />
+        <div class="card_info">
+          <div class="data-container">
+            <h3>Carlos</h3>
+            <p>Recoleta, Argentina</p>
+          </div>
+          <button class="report-button">Reportar</button>
+        </div>
+      </div>
         `;
 
       this.addStyles();

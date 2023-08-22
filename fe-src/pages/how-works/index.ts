@@ -1,8 +1,8 @@
 import { Router } from "../../router";
 
 customElements.define(
-  "welcome-page",
-  class WelcomePage extends HTMLElement {
+  "how-work-page",
+  class HowWorkPage extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" });
 
     constructor() {
@@ -71,18 +71,18 @@ customElements.define(
     }
 
     addListeners() {
-      const sendUbiBtn = this.shadow.querySelector(
-        ".send-ubi"
-      ) as HTMLButtonElement;
-      const howWorkBtn = this.shadow.querySelector(
-        ".how-work"
-      ) as HTMLButtonElement;
-      sendUbiBtn.addEventListener("click", (e) => {
-        Router.go("/lost-pets");
-      });
-      howWorkBtn.addEventListener("click", (e) => {
-        Router.go("/how-work");
-      });
+      //   const sendUbiBtn = this.shadow.querySelector(
+      //     ".send-ubi"
+      //   ) as HTMLButtonElement;
+      //   const howWorkBtn = this.shadow.querySelector(
+      //     ".how-work"
+      //   ) as HTMLButtonElement;
+      //   sendUbiBtn.addEventListener("click", (e) => {
+      //     Router.go("/lost-pets");
+      //   });
+      //   howWorkBtn.addEventListener("click", (e) => {
+      //     Router.go("/how-work");
+      //   });
     }
 
     render() {

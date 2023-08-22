@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import { DataTypes } from "sequelize";
 
-const sequelize = new Sequelize(`${process.env.POSTGRES_CREDS}`);
+const sequelize = new Sequelize(process.env.POSTGRES_CREDS);
 
 try {
   sequelize.authenticate().then(() => {
