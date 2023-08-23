@@ -14,13 +14,16 @@ export class AuthController {
   static async newAuth(authData) {
     const { email, password, user } = authData;
 
-    return await Auth.findOrCreate({
-      where: { user_id: user.get("id") },
-      defaults: {
-        userId: user.get("id"),
-        email,
-        password: getSHA256(password),
-      },
+    return await Auth.create({
+      userId: user.get("id"),
+      email,
+      password: getSHA256(password),
+    });
+  }
+
+  static async findAuth(userRecord) {
+    return await Auth.findOne({
+      where: { userId: userRecord.get("id") },
     });
   }
 

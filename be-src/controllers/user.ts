@@ -3,14 +3,14 @@ import { UserConfig } from "../interfaces";
 
 export class UserController {
   static async newUser(userData: UserConfig) {
-    const { email, fullname } = userData;
+    return await User.create({
+      ...userData,
+    });
+  }
 
-    return await User.findOrCreate({
-      where: { email },
-      defaults: {
-        email,
-        fullname,
-      },
+  static async findUser(userEmail: string) {
+    return await User.findOne({
+      where: { userEmail },
     });
   }
 

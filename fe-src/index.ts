@@ -5,6 +5,8 @@ import { Router } from "./router";
 // PAGES INITIALIZATION
 
 import "./pages/welcome";
+import "./pages/login";
+import "./pages/signup";
 import "./pages/lost-pets";
 import "./pages/how-works";
 
@@ -14,5 +16,5 @@ import "./components/header";
 import "./components/card";
 
 (() => {
-  Router.go("/lost-pets");
+  Router.go("/login");
 })();

@@ -18,7 +18,6 @@ export class PetController {
   }
 
   static async getNearbyPetsWithIP() {
-    // aroundLatLng: `${lat}, ${lng}`,
     try {
       const { hits } = await index.search("", {
         aroundLatLngViaIP: true,

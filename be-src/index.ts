@@ -36,46 +36,53 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-app.get("/nearby-pets", async (req, res) => {
-  // const { lat, lng } = req.query;
+// app.get("/nearby-pets", async (req, res) => {
+//   // const { lat, lng } = req.query;
 
-  // const nearbyPets = await PetController.getNearbyPets(lat, lng);
-  const nearbyPets = await PetController.getNearbyPetsWithIP();
+//   // const nearbyPets = await PetController.getNearbyPets(lat, lng);
+//   const nearbyPets = await PetController.getNearbyPetsWithIP();
 
-  res.json(nearbyPets);
-});
+//   res.json(nearbyPets);
+// });
 
-app.get("/pets", authMiddleware, async (req, res) => {
-  res.json(await PetController.getAllPets());
-});
+// app.get("users/:userId/pets", authMiddleware, async (req, res) => {
+//   res.json(await PetController.getAllPets());
+// });
 
-app.post("/pets", authMiddleware, async (req, res) => {
-  if (req.body.name && req.body.area && req.body.lat && req.body.lng) {
-    const newPet = await PetController.newLostPet(req.body);
+// app.post("/pets", authMiddleware, async (req, res) => {
+//   if (req.body.name && req.body.area && req.body.lat && req.body.lng) {
+//     const newPet = await PetController.newLostPet(req.body);
 
-    res.json(newPet);
-  } else {
-    res.json("falta data");
-  }
-});
+//     res.json(newPet);
+//   } else {
+//     res.json("falta data");
+//   }
+// });
 
-app.post("/users", async (req, res) => {});
-
-app.post("/auth", async (req, res) => {
+app.post("/users", async (req, res) => {
   const { email, password, fullname } = req.body;
 
-  const [userRecord, created] = await UserController.newUser({
+  const userRecord = await UserController.newUser({
     email,
     fullname,
   });
 
-  const [authRecord, createdAuth] = await AuthController.newAuth({
+  await AuthController.newAuth({
     userRecord,
     email,
     password,
   });
 
-  res.json({ authRecord });
+  res.json("User created successfully");
+});
+
+app.post("/auth", async (req, res) => {
+  const { email } = req.body;
+
+  const userRecord = await UserController.findUser(email);
+  const authRecord = await AuthController.findAuth(userRecord);
+
+  res.json(authRecord);
 });
 
 app.post("/auth/token", async (req, res) => {
@@ -100,11 +107,11 @@ app.get("/me", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-app.get("/me/pets", authMiddleware, async (req, res) => {
-  const userPets = await PetController.getMyPets(req["_user"].id);
+// app.get("/me/pets", authMiddleware, async (req, res) => {
+//   const userPets = await PetController.getMyPets(req["_user"].id);
 
-  res.json(userPets);
-});
+//   res.json(userPets);
+// });
 
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "../dist", "index.html"))
