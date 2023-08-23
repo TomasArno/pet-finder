@@ -14,5 +14,5 @@ import "./components/header";
 import "./components/card";
 
 (() => {
-  Router.go("/");
+  Router.go("/lost-pets");
 })();

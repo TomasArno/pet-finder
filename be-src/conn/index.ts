@@ -1,5 +1,4 @@
-import { Sequelize } from "sequelize";
-import { DataTypes } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize";
 
 const sequelize = new Sequelize(process.env.POSTGRES_CREDS);
 

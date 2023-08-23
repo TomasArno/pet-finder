@@ -56,6 +56,12 @@ customElements.define(
         flex-direction: column;
         row-gap: 10px;
       }
+
+      .comps-container {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+      }
       
       .button {
         background-color: rebeccapurple;
@@ -74,11 +80,17 @@ customElements.define(
       const sendUbiBtn = this.shadow.querySelector(
         ".send-ubi"
       ) as HTMLButtonElement;
+
       const howWorkBtn = this.shadow.querySelector(
         ".how-work"
       ) as HTMLButtonElement;
-      sendUbiBtn.addEventListener("click", (e) => {
-        Router.go("/lost-pets");
+
+      sendUbiBtn.addEventListener("click", async (e) => {
+        const res = await fetch("/nearby-pets");
+        const data = await res.json();
+        console.log(data);
+
+        // Router.go("/lost-pets");
       });
       howWorkBtn.addEventListener("click", (e) => {
         Router.go("/how-work");
@@ -102,7 +114,9 @@ customElements.define(
         </div>
 
         <div class="buttons-container">
-          <button class="send-ubi button">Dar mi ubicación actual</button>
+          <div class="comps-container">
+            <button class="send-ubi button">Dar mi ubicación actual</button>
+          </div>
           <button class="how-work button">¿Cómo funciona Pet Finder?</button>
         </div>
       </main>

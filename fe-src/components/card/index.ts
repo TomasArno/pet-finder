@@ -52,7 +52,9 @@ customElements.define(
         ".report-button"
       ) as HTMLButtonElement;
 
-      reportButtonEl.addEventListener("click", (e) => {});
+      reportButtonEl.addEventListener("click", (e) => {
+        fetch("/");
+      });
     }
 
     render() {
