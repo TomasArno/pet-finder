@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as path from "path";
 import * as cors from "cors";
-import * as jwt from "jsonwebtoken";
+import * as crypto from "crypto";
 
 import { UserController } from "./controllers/user";
 import { AuthController } from "./controllers/auth";
@@ -17,18 +17,21 @@ app.use(express.static("dist"));
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
-const SECRET_KEY = process.env.SECRET_KEY_JWT;
+const getSHA256 = (input: string): string => {
+  return crypto.createHash("sha256").update(input).digest("hex");
+};
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (token) {
-    try {
-      const data = jwt.verify(token, SECRET_KEY);
+    const data = AuthController.verifyToken(token);
+
+    if (data) {
       req._user = data;
 
       next();
-    } catch {
+    } else {
       res.status(401).json({ error: "invalid token" });
     }
   } else {
@@ -59,45 +62,52 @@ const authMiddleware = (req, res, next) => {
 //   }
 // });
 
-app.post("/users", async (req, res) => {
-  const { email, password, fullname } = req.body;
-
-  const userRecord = await UserController.newUser({
-    email,
-    fullname,
-  });
-
-  await AuthController.newAuth({
-    userRecord,
-    email,
-    password,
-  });
-
-  res.json("User created successfully");
+app.get("/test", async (req, res) => {
+  res.json([await UserController.getAll(), await AuthController.getAll()]);
 });
 
-app.post("/auth", async (req, res) => {
-  const { email } = req.body;
+app.post("/login", async (req, res) => {
+  if (req.body && req.body.email && req.body.password) {
+    const { email, password } = req.body;
 
-  const userRecord = await UserController.findUser(email);
-  const authRecord = await AuthController.findAuth(userRecord);
+    const authRecord = await AuthController.getAuth({
+      email,
+      password: getSHA256(password),
+    });
 
-  res.json(authRecord);
-});
+    if (authRecord) {
+      const token = AuthController.createToken(authRecord);
 
-app.post("/auth/token", async (req, res) => {
-  const { email, password } = req.body;
-
-  const authRecord = await AuthController.getAuth({
-    email,
-    password,
-  });
-
-  if (authRecord) {
-    const token = AuthController.createToken(authRecord);
-    res.json(token);
+      res.status(200).json({ token });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
   } else {
-    res.json("invalid credentials");
+    res.status(400).json({ message: "es necesario email y contraseña" });
+  }
+});
+
+app.post("/signup", async (req, res) => {
+  if (req.body && req.body.email && req.body.password) {
+    const { email, password } = req.body;
+
+    const userRecord = await UserController.newUser(email);
+
+    const authRecord = await AuthController.newAuth({
+      email,
+      password: getSHA256(password),
+      userRecord,
+    });
+
+    if (authRecord) {
+      const token = AuthController.createToken(authRecord);
+
+      res.status(201).json({ token });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  } else {
+    res.status(400).json({ message: "es necesario email y contraseña" });
   }
 });
 

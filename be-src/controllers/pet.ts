@@ -1,5 +1,5 @@
 import { Pet } from "../models";
-import { index } from "../lib/algolia";
+import { index } from "../libs/algolia";
 
 import { PetConfig } from "../interfaces";
 

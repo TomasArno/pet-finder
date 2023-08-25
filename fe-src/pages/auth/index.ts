@@ -1,8 +1,8 @@
 import { Router } from "../../router";
 
 customElements.define(
-  "login-page",
-  class LoginPage extends HTMLElement {
+  "auth-page",
+  class AuthPage extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" });
 
     constructor() {
@@ -36,7 +36,7 @@ customElements.define(
 
       }
 
-      .comps-container {
+      .form {
         width: 80%;
         display: flex;
         flex-direction: column;
@@ -73,39 +73,56 @@ customElements.define(
     }
 
     addListeners() {
-      const sendUbiBtn = this.shadow.querySelector(
-        ".send-ubi"
-      ) as HTMLButtonElement;
+      const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
 
-      const howWorkBtn = this.shadow.querySelector(
-        ".how-work"
-      ) as HTMLButtonElement;
+      formEl.addEventListener("submit", async (e) => {
+        const email = formEl.email.value;
+        const password = formEl.password.value;
 
-      sendUbiBtn.addEventListener("click", async (e) => {
-        const res = await fetch("/nearby-pets");
-        const data = await res.json();
-        console.log(data);
+        e.preventDefault();
 
-        // Router.go("/lost-pets");
-      });
-      howWorkBtn.addEventListener("click", (e) => {
-        Router.go("/how-work");
+        const res = await fetch("/users", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        if (res.status == 201) {
+          const data = await res.json();
+          console.log(data);
+
+          Router.go("/lost-pets");
+        }
       });
     }
 
     render() {
+      let title: string;
+
+      if (window.location.pathname == "/auth/signin") {
+        title = "Registrarse";
+      } else {
+        title = "Iniciar Sesión";
+      }
+
       this.shadow.innerHTML = `        
         <main class="main">
             <div class="welcome-container">
-                <h1>Iniciar Sesión</h1>
+                <h1>${title}</h1>
             </div>
-            <div class="comps-container">
-                <div class="input-container">
-                    <input placeholder="Email" class="input" type=text />
-                    <input placeholder="Contraseña" class="input" type=password />
-                </div>
-                <button class="submit-btn">Iniciar Sesión</button>
-            </div>
+
+            <form class="form" >
+              <div class="input-container">
+                <input placeholder="Email" autocomplete="email" class="input" name="email" type="email" required />
+                <input placeholder="Contraseña" class="input" name="password" type="password" required />
+              </div>
+              <button type=submit class="submit-btn">Iniciar Sesión</button>
+            </form>
         </main>
       `;
 

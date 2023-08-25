@@ -1,20 +1,23 @@
 import { User } from "../models";
-import { UserConfig } from "../interfaces";
 
 export class UserController {
-  static async newUser(userData: UserConfig) {
+  static async newUser(email: string) {
     return await User.create({
-      ...userData,
+      email,
     });
   }
 
-  static async findUser(userEmail: string) {
+  static async getUser(email: string) {
     return await User.findOne({
-      where: { userEmail },
+      where: { email },
     });
   }
 
-  static async getUser(userId: string) {
-    return await User.findByPk(userId);
+  static async getAll() {
+    return await User.findAll();
   }
+
+  // static async findUser(userId: string) {
+  //   return await User.findByPk(userId);
+  // }
 }
