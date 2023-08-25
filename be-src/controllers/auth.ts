@@ -12,11 +12,31 @@ export class AuthController {
     });
   }
 
-  // static async findAuth(userRecord) {
+  // static async findAuth(userId: string) {
   //   return await Auth.findOne({
-  //     where: { userId: userRecord.get("id") },
+  //     where: { userId },
   //   });
   // }
+
+  static async changeCredentials(
+    credentials: {
+      oldPassword: string;
+      newPassword: string;
+    },
+    userId: string
+  ) {
+    // agregar validacion x si meten misma contraseña
+    const { newPassword, oldPassword } = credentials;
+    return await Auth.update(
+      { password: newPassword },
+      {
+        where: {
+          userId,
+          password: oldPassword,
+        },
+      }
+    );
+  }
 
   static async getAuth(authData: AuthConfig) {
     const { email, password } = authData;

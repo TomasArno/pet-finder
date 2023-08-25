@@ -7,9 +7,9 @@ export class UserController {
     });
   }
 
-  static async getUser(email: string) {
+  static async getUser(id: number) {
     return await User.findOne({
-      where: { email },
+      where: { id },
     });
   }
 

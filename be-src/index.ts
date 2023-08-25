@@ -59,7 +59,7 @@ app.get("/test", verifyJwtToken, async (req, res) => {
     .json([await UserController.getAll(), await AuthController.getAll()]);
 });
 
-app.post("/signup", async (req, res) => {
+app.post("/users", async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
     const { email, password } = req.body;
 
@@ -107,14 +107,32 @@ app.post("/login", async (req, res) => {
 app.get("/me", verifyJwtToken, async (req, res) => {
   const user = await UserController.getUser(req["_user"].id);
 
-  res.json(user);
+  if (user) res.status(200).json({ userId: user.dataValues.id });
 });
 
-// app.get("/me/pets", authMiddleware, async (req, res) => {
-//   const userPets = await PetController.getMyPets(req["_user"].id);
+app.put(
+  "/users/:userId/change-credentials",
+  verifyJwtToken,
+  async (req, res) => {
+    const { userId } = req.params;
 
-//   res.json(userPets);
-// });
+    if (req.body && req.body.oldPassword && req.body.newPassword) {
+      const { newPassword, oldPassword } = req.body;
+
+      const [affectedUsers] = await AuthController.changeCredentials(
+        {
+          oldPassword: getSHA256(oldPassword),
+          newPassword: getSHA256(newPassword),
+        },
+        userId
+      );
+
+      affectedUsers
+        ? res.status(200).json({ message: "Modified credentials" })
+        : res.status(404).json({ message: "Not found" });
+    }
+  }
+);
 
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "../dist", "index.html"))

@@ -26,10 +26,10 @@ customElements.define(
       }
       
       .main {
-        background-color: grey;
-        height: 100%;
         padding: 80px 0;
-
+        
+        background-color: grey;
+        height: calc(100% - 50px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -79,7 +79,7 @@ customElements.define(
       let input: string;
 
       if (window.location.pathname == "/auth/login") {
-        input = "/login";
+        input = "/users";
       } else {
         input = "/signup";
       }

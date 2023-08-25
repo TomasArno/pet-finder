@@ -86,11 +86,11 @@ customElements.define(
       ) as HTMLButtonElement;
 
       sendUbiBtn.addEventListener("click", async (e) => {
-        const res = await fetch("/nearby-pets");
-        const data = await res.json();
-        console.log(data);
+        // const res = await fetch("/nearby-pets");
+        // const data = await res.json();
+        // console.log(data);
 
-        // Router.go("/lost-pets");
+        Router.go("/lost-pets");
       });
       howWorkBtn.addEventListener("click", (e) => {
         Router.go("/how-work");
