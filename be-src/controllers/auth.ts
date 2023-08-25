@@ -1,10 +1,6 @@
 import { Auth } from "../models";
 import { AuthConfig } from "../interfaces";
 
-import * as jwt from "jsonwebtoken";
-
-const SECRET_KEY = process.env.SECRET_KEY_JWT;
-
 export class AuthController {
   static async newAuth(authData) {
     const { email, password, userRecord } = authData;
@@ -34,18 +30,5 @@ export class AuthController {
 
   static async getAll() {
     return await Auth.findAll();
-  }
-
-  static createToken(authRecord) {
-    const token = jwt.sign({ id: authRecord.get("userId") }, SECRET_KEY);
-    return token;
-  }
-
-  static verifyToken(token: string) {
-    try {
-      return jwt.verify(token, SECRET_KEY);
-    } catch {
-      return "Unauthorized";
-    }
   }
 }

@@ -1,11 +1,13 @@
 import * as express from "express";
 import * as path from "path";
 import * as cors from "cors";
+import * as jwt from "jsonwebtoken";
 import * as crypto from "crypto";
 
 import { UserController } from "./controllers/user";
 import { AuthController } from "./controllers/auth";
 import { PetController } from "./controllers/pet";
+import { verifyJwtToken } from "./middlewares/authJwt";
 
 // import { sequelize } from "./conn";
 // sequelize.sync({ force: true });
@@ -17,26 +19,15 @@ app.use(express.static("dist"));
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
+const SECRET_KEY = process.env.SECRET_KEY_JWT;
+
 const getSHA256 = (input: string): string => {
   return crypto.createHash("sha256").update(input).digest("hex");
 };
 
-const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (token) {
-    const data = AuthController.verifyToken(token);
-
-    if (data) {
-      req._user = data;
-
-      next();
-    } else {
-      res.status(401).json({ error: "invalid token" });
-    }
-  } else {
-    res.status(401).json({ error: "invalid token" });
-  }
+export const createJwtToken = (authRecord) => {
+  const token = jwt.sign({ id: authRecord.get("userId") }, SECRET_KEY);
+  return token;
 };
 
 // app.get("/nearby-pets", async (req, res) => {
@@ -62,29 +53,10 @@ const authMiddleware = (req, res, next) => {
 //   }
 // });
 
-app.get("/test", async (req, res) => {
-  res.json([await UserController.getAll(), await AuthController.getAll()]);
-});
-
-app.post("/login", async (req, res) => {
-  if (req.body && req.body.email && req.body.password) {
-    const { email, password } = req.body;
-
-    const authRecord = await AuthController.getAuth({
-      email,
-      password: getSHA256(password),
-    });
-
-    if (authRecord) {
-      const token = AuthController.createToken(authRecord);
-
-      res.status(200).json({ token });
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } else {
-    res.status(400).json({ message: "es necesario email y contraseña" });
-  }
+app.get("/test", verifyJwtToken, async (req, res) => {
+  res
+    .status(200)
+    .json([await UserController.getAll(), await AuthController.getAll()]);
 });
 
 app.post("/signup", async (req, res) => {
@@ -100,18 +72,39 @@ app.post("/signup", async (req, res) => {
     });
 
     if (authRecord) {
-      const token = AuthController.createToken(authRecord);
+      const token = createJwtToken(authRecord);
 
       res.status(201).json({ token });
     } else {
       res.status(500).json({ message: "Something went wrong" });
     }
   } else {
-    res.status(400).json({ message: "es necesario email y contraseña" });
+    res.status(400).json({ message: "Missing information" });
   }
 });
 
-app.get("/me", authMiddleware, async (req, res) => {
+app.post("/login", async (req, res) => {
+  if (req.body && req.body.email && req.body.password) {
+    const { email, password } = req.body;
+
+    const authRecord = await AuthController.getAuth({
+      email,
+      password: getSHA256(password),
+    });
+
+    if (authRecord) {
+      const token = createJwtToken(authRecord);
+
+      res.status(200).json({ token });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } else {
+    res.status(400).json({ message: "Missing information" });
+  }
+});
+
+app.get("/me", verifyJwtToken, async (req, res) => {
   const user = await UserController.getUser(req["_user"].id);
 
   res.json(user);

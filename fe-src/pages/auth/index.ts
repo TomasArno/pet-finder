@@ -1,4 +1,5 @@
 import { Router } from "../../router";
+import { state } from "../../state";
 
 customElements.define(
   "auth-page",
@@ -75,13 +76,21 @@ customElements.define(
     addListeners() {
       const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
 
+      let input: string;
+
+      if (window.location.pathname == "/auth/login") {
+        input = "/login";
+      } else {
+        input = "/signup";
+      }
+
       formEl.addEventListener("submit", async (e) => {
         const email = formEl.email.value;
         const password = formEl.password.value;
 
         e.preventDefault();
 
-        const res = await fetch("/users", {
+        const res = await fetch(input, {
           method: "post",
           headers: {
             "Content-Type": "application/json",
@@ -92,9 +101,11 @@ customElements.define(
           }),
         });
 
-        if (res.status == 201) {
-          const data = await res.json();
-          console.log(data);
+        if (res.status == 201 || res.status == 200) {
+          const { token } = await res.json();
+          console.log(token);
+
+          state.setJwtTokenInLocalStorage(token);
 
           Router.go("/lost-pets");
         }
@@ -104,7 +115,7 @@ customElements.define(
     render() {
       let title: string;
 
-      if (window.location.pathname == "/auth/signin") {
+      if (window.location.pathname == "/auth/signup") {
         title = "Registrarse";
       } else {
         title = "Iniciar Sesión";
@@ -121,7 +132,7 @@ customElements.define(
                 <input placeholder="Email" autocomplete="email" class="input" name="email" type="email" required />
                 <input placeholder="Contraseña" class="input" name="password" type="password" required />
               </div>
-              <button type=submit class="submit-btn">Iniciar Sesión</button>
+              <button type=submit class="submit-btn">Acceder</button>
             </form>
         </main>
       `;

@@ -1,3 +1,5 @@
+import { state } from "../../state";
+
 customElements.define(
   "card-comp",
   class Card extends HTMLElement {
@@ -52,8 +54,18 @@ customElements.define(
         ".report-button"
       ) as HTMLButtonElement;
 
-      reportButtonEl.addEventListener("click", (e) => {
-        fetch("/");
+      reportButtonEl.addEventListener("click", async (e) => {
+        const res = await state.authFetch("/test");
+
+        if (res.status == 200) {
+          const data = await res.json();
+
+          console.log(data);
+        } else {
+          const err = await res.json();
+
+          console.error(err);
+        }
       });
     }
 
