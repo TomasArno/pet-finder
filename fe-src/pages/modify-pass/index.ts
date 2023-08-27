@@ -80,17 +80,14 @@ customElements.define(
         const oldPassword = formEl.oldPassword.value;
         const newPassword = formEl.newPassword.value;
 
-        const res = await state.authFetch(
-          `/users/${userId}/change-credentials`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              oldPassword,
-              newPassword,
-            }),
-          }
-        );
+        const res = await state.authFetch(`/api/users/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            oldPassword,
+            newPassword,
+          }),
+        });
 
         if (res.status == 200) {
           const data = await res.json();

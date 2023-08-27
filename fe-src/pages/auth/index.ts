@@ -79,9 +79,9 @@ customElements.define(
       let input: string;
 
       if (window.location.pathname == "/auth/login") {
-        input = "/users";
+        input = "/api/users/login";
       } else {
-        input = "/signup";
+        input = "/api/users/signup";
       }
 
       formEl.addEventListener("submit", async (e) => {
