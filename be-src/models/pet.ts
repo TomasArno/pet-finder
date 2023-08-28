@@ -1,4 +1,4 @@
-import { sequelize, DataTypes } from "../conn";
+import { sequelize, DataTypes } from "../database";
 
 export const Pet = sequelize.define("pet", {
   name: {

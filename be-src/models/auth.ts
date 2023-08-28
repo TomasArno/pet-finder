@@ -1,4 +1,4 @@
-import { sequelize, DataTypes } from "../conn";
+import { sequelize, DataTypes } from "../database";
 
 export const Auth = sequelize.define("auth", {
   password: {

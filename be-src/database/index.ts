@@ -1,6 +1,8 @@
 import { Sequelize, DataTypes } from "sequelize";
 
-const sequelize = new Sequelize(process.env.POSTGRES_CREDS);
+const sequelize = new Sequelize(process.env.POSTGRES_CREDS, {
+  dialect: "postgres",
+});
 
 try {
   sequelize.authenticate().then(() => {

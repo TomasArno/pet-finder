@@ -1,7 +1,6 @@
 {
   "name": "pet-finder",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "dev:be": "nodemon --watch './be-src/app.ts' --exec 'ts-node ./be-src/dev.ts'",

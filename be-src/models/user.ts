@@ -1,4 +1,4 @@
-import { sequelize, DataTypes } from "../conn";
+import { sequelize, DataTypes } from "../database";
 
 export const User = sequelize.define("user", {
   email: {
