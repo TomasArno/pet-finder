@@ -27,9 +27,8 @@ customElements.define(
       
       .main {
         padding: 80px 0;
-        
         background-color: grey;
-        height: calc(100% - 50px);
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;

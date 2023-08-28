@@ -7,10 +7,14 @@ export class UserController {
     });
   }
 
-  static async getUser(id: number) {
+  static async getUserByEmail(email: string) {
     return await User.findOne({
-      where: { id },
+      where: { email },
     });
+  }
+
+  static async getUserById(id: number) {
+    return await User.findByPk(id);
   }
 
   static async getAll() {

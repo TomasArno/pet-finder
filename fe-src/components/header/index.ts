@@ -32,6 +32,77 @@ customElements.define(
         align-items: center;
         padding: 0 10px;
       }
+
+      .header_menu-container {
+        cursor: pointer;
+      }
+
+      @media (min-width: 768px) {
+        .header__menu-desplegable {
+          display: none !important;
+        }
+      }
+      
+      .menu-desplegado {
+        background-color: rgb(1, 15, 96);
+        display: none;
+      
+        position: fixed;
+      
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        justify-content: space-around;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .close-menu {
+        border: 1px solid orange;
+        color: white;
+        padding: 0 6px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+      }
+      
+      .menu-desplegado__content {
+        width: 264px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        row-gap: 60px;
+
+        font-size: 10px;
+        font-weight: 400;
+        text-align: center;
+        letter-spacing: 0em;
+      }
+      
+      @media (min-width: 375px) {
+        .menu-desplegado__content {
+          font-size: 25px;
+        }
+      }
+      
+      .menu-desplegado__item {
+        color: rgb(255, 255, 254);
+        text-decoration: none;
+      }
+
+      .logout-btn {
+        background-color: rebeccapurple;
+        border-color: rebeccapurple;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        height: 40px;
+        width: 220px;
+      }
+      
       `;
 
       this.shadow.appendChild(stylesEl);
@@ -42,7 +113,23 @@ customElements.define(
         ".header_menu-container"
       ) as HTMLButtonElement;
 
-      menuEl.addEventListener("click", (e) => {});
+      const menuDesplegado = this.shadow.querySelector(
+        ".menu-desplegado"
+      ) as HTMLDivElement;
+
+      const closeMenu = this.shadow.querySelector(
+        ".close-menu"
+      ) as HTMLDivElement;
+
+      menuEl.addEventListener("click", (e) => {
+        menuDesplegado.style.display = "inherit";
+        menuEl.style.display = "none";
+      });
+
+      closeMenu.addEventListener("click", () => {
+        menuDesplegado.style.display = "none";
+        menuEl.style.display = "inherit";
+      });
     }
 
     render() {
@@ -57,6 +144,19 @@ customElements.define(
 
             <div class="header_menu-container">
                 <img src="${menuImg}" alt="logo.svg" />
+            </div>
+
+            <div class = "menu-desplegado">
+              <span class="close-menu">X</span>
+              
+              <div class = "menu-desplegado__content">
+                <span><a class="menu-desplegado__item" href="/profile">Mis datos</a></span>
+                <span><a class="menu-desplegado__item" href="/lost-pets">Mis mascotas reportadas</a></span>
+                <span><a class="menu-desplegado__item" href="">Reportar mascota</a></span>
+              </div>
+
+              <button class="logout-btn">Cerrar Sesion</button>
+
             </div>
         </header>
       `;

@@ -1,3 +1,4 @@
+import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
 customElements.define(
@@ -55,7 +56,7 @@ customElements.define(
       ) as HTMLButtonElement;
 
       reportButtonEl.addEventListener("click", async (e) => {
-        const res = await state.authFetch("/test");
+        const res = await state.authFetch("/api/users/test");
 
         if (res.status == 200) {
           const data = await res.json();
@@ -63,8 +64,8 @@ customElements.define(
           console.log(data);
         } else {
           const err = await res.json();
-
           console.error(err);
+          Router.go("/auth/login");
         }
       });
     }

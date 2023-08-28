@@ -26,7 +26,7 @@ customElements.define(
         
         .main {
             background-color: grey;
-            height: 100%;
+            height: calc(100% - 50px);
             padding: 80px 0;
 
             display: flex;

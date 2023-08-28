@@ -29,7 +29,7 @@ export class AuthController {
     },
     userId: string
   ) {
-    // agregar validacion x si meten misma contraseña
+    // agregar validacion x si meten misma contraseña o si es distinta la oldPass
     const { newPassword, oldPassword } = credentials;
     return await Auth.update(
       { password: newPassword },
