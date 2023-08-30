@@ -55,16 +55,6 @@ customElements.define(
         right: 0;
       }
       
-      .close-menu {
-        border: 1px solid orange;
-        color: white;
-        padding: 0 6px;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 20px;
-      }
-      
       .menu-desplegado__content {
         width: 70%;
         max-width: 550px;
@@ -117,16 +107,6 @@ customElements.define(
         display: none !important;
       }
 
-      .publish-btn {
-        background-color: rebeccapurple;
-
-        height: 40px;
-        width: 220px;
-        color: rgb(255, 255, 255);
-        border-color: rebeccapurple;
-        border-radius: 10px;
-      }
-
       .map {
         background: #d1d1d14f;
         width: 100%;
@@ -156,46 +136,37 @@ customElements.define(
       });
     }
 
-    initSearchForm(callback) {
-      const formElMapbox = this.shadow.querySelector(
-        ".search-form"
-      ) as HTMLFormElement;
+    sendUbiSelected(callback) {
+      const searchBtnEl = this.shadow.querySelector(
+        ".search-btn"
+      ) as HTMLButtonElement;
 
-      formElMapbox.addEventListener("submit", (e: any) => {
-        e.preventDefault();
-        // const mapboxClient = new MapboxClient(process.env.MAPBOX_TOKEN);
+      const locationInputEl = this.shadow.querySelector(
+        ".search-input"
+      ) as HTMLInputElement;
 
-        // mapboxClient.geocodeForward(
-        //   e.target.input.value,
-        //   {
-        //     country: "ar",
-        //     autocomplete: true,
-        //     language: "es",
-        //   },
-        //   function (err, data, res) {
-        //     console.log(data);
-        //     if (!err) callback(data.features);
-        //   }
-        // );
+      searchBtnEl.addEventListener("click", () => {
+        if (locationInputEl.value) {
+          const mapboxClient = new MapboxClient(process.env.MAPBOX_TOKEN);
+
+          mapboxClient.geocodeForward(
+            locationInputEl.value,
+            {
+              country: "ar",
+              autocomplete: true,
+              language: "es",
+            },
+            (err, data, res) => {
+              if (!err) callback(data.features);
+            }
+          );
+        }
       });
     }
 
-    addListeners() {
-      // const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
-
-      // formEl.addEventListener("submit", async (e) => {
-      //   e.preventDefault();
-
-      //   // const name = formEl.fullname.value;
-      //   // console.log(name);
-
-      //   state.authFetch("/api/pets/");
-      // });
-
-      // MENU
-
+    menuListener() {
       const buttonEl = this.shadow.querySelector(
-        ".publish-btn"
+        ".open-menu-btn"
       ) as HTMLButtonElement;
 
       const menuDesplegado = this.shadow.querySelector(
@@ -209,64 +180,80 @@ customElements.define(
       buttonEl.addEventListener("click", (e) => {
         menuDesplegado.style.display = "flex";
         buttonEl.style.display = "none";
-
-        // closeMenu.addEventListener("click", () => {
-        //   menuDesplegado.style.display = "none";
-        //   buttonEl.style.display = "initial";
-        // });
-
-        // DROPZONE
-
-        const dropArea = this.shadow.querySelector(
-          ".drop-area"
-        ) as HTMLDivElement;
-
-        let imageURL;
-
-        const myDropzone = new Dropzone(dropArea, {
-          url: "/falsa",
-          autoProcessQueue: false,
-          maxFiles: 1,
-          addRemoveLinks: true,
-          dictRemoveFile: "Eliminar",
-          thumbnailWidth: 230,
-        });
-
-        myDropzone.on("thumbnail", (file) => {
-          imageURL = file.dataURL;
-        });
-
-        // MAPBOX
-
-        const map = this.initMap();
-
-        map.addControl(
-          new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl,
-          })
-        );
-
-        // this.initSearchForm((results) => {
-        //   const firstResult = results[0];
-        //   const marker = new mapboxgl.Marker()
-        //     .setLngLat(firstResult.geometry.coordinates)
-        //     .addTo(map);
-
-        //   const [lng, lat] = firstResult.geometry.coordinates;
-        //   // fetch(`/nearby-shops?lat=${lat}&lng=${lng}`)
-        //   //   .then((res) => res.json())
-        //   //   .then((results) => {
-        //   //     for (const shop of results) {
-        //   //       const { lat, lng } = shop._geoloc;
-        //   //       new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-        //   //     }
-        //   // });
-
-        //   map.setCenter(firstResult.geometry.coordinates);
-        //   map.setZoom(14);
-        // });
       });
+
+      closeMenu.addEventListener("click", () => {
+        menuDesplegado.style.display = "none";
+        buttonEl.style.display = "initial";
+      });
+    }
+
+    addDropzone() {
+      const dropArea = this.shadow.querySelector(
+        ".drop-area"
+      ) as HTMLDivElement;
+
+      let imageURL;
+
+      const myDropzone = new Dropzone(dropArea, {
+        url: "/falsa",
+        autoProcessQueue: false,
+        maxFiles: 1,
+        addRemoveLinks: true,
+        dictRemoveFile: "Eliminar",
+        thumbnailWidth: 230,
+      });
+
+      myDropzone.on("thumbnail", (file) => {
+        imageURL = file.dataURL;
+      });
+    }
+
+    addMapbox() {
+      const map = this.initMap();
+
+      this.sendUbiSelected((results) => {
+        const firstResult = results[0];
+        const marker = new mapboxgl.Marker()
+          .setLngLat(firstResult.geometry.coordinates)
+          .addTo(map);
+
+        const [lng, lat] = firstResult.geometry.coordinates;
+        // fetch(`/nearby-shops?lat=${lat}&lng=${lng}`)
+        //   .then((res) => res.json())
+        //   .then((results) => {
+        //     for (const shop of results) {
+        //       const { lat, lng } = shop._geoloc;
+        //       new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+        //     }
+        // });
+
+        map.setCenter(firstResult.geometry.coordinates);
+        map.setZoom(14);
+      });
+    }
+
+    addListeners() {
+      const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
+
+      formEl.addEventListener("click", (e) => {
+        e.preventDefault();
+      });
+
+      const publishBtnEl = this.shadow.querySelector(
+        ".publish-btn"
+      ) as HTMLButtonElement;
+      publishBtnEl.addEventListener("click", async () => {
+        console.log("hola");
+
+        // const name = formEl.fullname.value;
+        // console.log(name);
+        // state.authFetch("/api/pets/");
+      });
+
+      this.menuListener();
+      this.addDropzone();
+      this.addMapbox();
     }
 
     render() {
@@ -275,22 +262,24 @@ customElements.define(
   
         <main class="main">
             <h1>Mascotas Reportadas</h1>
-            <button class="publish-btn">Publicar Reporte</button>
+            <button class="open-menu-btn button">Publicar Reporte</button>
         </main>
         <div class= "menu-desplegado">
           <div class= "menu-desplegado__content">
             <h2>Reportar Mascota</h2>
             <h5 class="sub-title">Ingresá la siguiente información para realizar el reporte de la mascota</h5>
               
-            <form class="form">
+            <form class="form" id="button">
               <input class="input" type="text" name="name"/>
               <div class="drop-area"></div>
-              <button class="publish-btn button">Agregar foto</button>
-              <div id="map" class="map"></div>
 
-              <button type="submit" class="publish-btn button">Reportar mascota</button>
-              <button class="publish-btn button">Cancelar reporte</button>
+              <input placeholder="Ubicacion" class="search-input input" name="input" type="search" />
+              <button class="search-btn button">Buscar</button>
+
+              <button form="button" class="publish-btn button">Reportar mascota</button>
+              <button class="close-menu button">Cancelar reporte</button>
             </form>
+
           </div>
         </div>
         
