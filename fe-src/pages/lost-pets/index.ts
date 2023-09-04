@@ -67,11 +67,7 @@ customElements.define(
       
       <main class="main">
         <div class="carousell">
-            <card-comp></card-comp>
-            <card-comp></card-comp>
-            <card-comp></card-comp>
-            <card-comp></card-comp>
-            <card-comp></card-comp>
+          <card-comp></card-comp>
         </div>
       </main>
       `;

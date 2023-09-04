@@ -86,15 +86,10 @@ customElements.define(
     }
 
     render() {
-      const mainImg = require("../../images/undraw_beach_day_cser 1.svg");
-
       this.shadow.innerHTML = `
       <header-comp></header-comp>
 
       <main class="main">
-        <div class="main_img-container">
-          <img src="${mainImg}" alt="" />
-        </div>
 
         <div class="welcome-container">
           <h1>Pet Finder App</h1>

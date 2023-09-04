@@ -70,7 +70,9 @@ usersRouter.get("/test", verifyJwtToken, async (req, res) => {
 usersRouter.get("/me", verifyJwtToken, async (req, res) => {
   const user = await UserController.getUserById(req["_user"].id);
 
-  if (user) res.status(200).json({ userId: user.dataValues.id });
+  if (!user) return res.status(400).json({ message: "User Not Found" });
+
+  res.status(200).json({ userId: user.dataValues.id });
 });
 
 usersRouter.put("/:userId", verifyJwtToken, async (req, res) => {

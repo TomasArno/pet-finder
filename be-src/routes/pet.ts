@@ -12,6 +12,19 @@ petsRouter.get("/", async (req, res) => {
   res.status(200).json(await PetController.getAllPets());
 });
 
+petsRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  console.log(req.socket.remoteAddress, "ip");
+
+  const searchedPet = await PetController.getById(parseInt(id));
+
+  if (!searchedPet)
+    return res.status(400).json({ message: "Searched pet doesn't exist" });
+
+  res.status(200).json(searchedPet);
+});
+
 petsRouter.get("/:lat/:lng", async (req, res) => {
   const { lat, lng } = req.params;
 
@@ -22,10 +35,10 @@ petsRouter.get("/:lat/:lng", async (req, res) => {
 });
 
 petsRouter.post("/", verifyJwtToken, async (req, res) => {
-  console.log("llegue");
-
   if (req.body.name && req.body.imgURL && req.body.lat && req.body.lng) {
-    req.body.imgURL = (await submitImgCloudinary(req.body.imgURL)).secure_url;
+    // req.body.imgURL = (await submitImgCloudinary(req.body.imgURL)).secure_url;
+    req.body.imgURL = "https://picsum.photos/200/300"; // MOCK
+    req.body.userId = req["_user"].id;
 
     const newPet = await PetController.create(req.body);
 

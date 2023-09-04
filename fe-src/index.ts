@@ -24,15 +24,17 @@ import "./components/card";
 import "./components/inputs";
 
 (async () => {
-  Router.go("/reports");
-  // const res = await state.authFetch("/api/users/me");
-  // if (res.status == 200) {
-  //   const { userId } = await res.json();
-  //   const cs = state.getState();
-  //   state.setState({ ...cs, userId });
-  //   // Router.go("/lost-pets");
-  //   Router.go("/profile");
-  // } else {
-  //   Router.go("/");
-  // }
+  const res = await state.authFetch("/api/users/me");
+
+  if (res.status == 200) {
+    const { userId } = await res.json();
+
+    const cs = state.getState();
+    state.setState({ ...cs, userId });
+
+    Router.go("/lost-pets");
+  } else {
+    Router.go("/auth/signup");
+    state.deleteJwtTokenInLocalStorage();
+  }
 })();

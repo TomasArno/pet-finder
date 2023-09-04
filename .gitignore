@@ -4,3 +4,4 @@ dist
 .env
 dev.ts
 be-dist
+sync.ts

@@ -98,14 +98,12 @@ customElements.define(
     }
 
     render() {
-      const mainImg = require("../../images/undraw_beach_day_cser 1.svg");
-
       this.shadow.innerHTML = `
       <header-comp></header-comp>
 
       <main class="main">
         <div class="main_img-container">
-          <img src="${mainImg}" alt="" />
+          <img src="https://res.cloudinary.com/dy4or1hqa/image/upload/v1693850987/undraw_beach_day_cser_1_zxqbmr.svg" alt="" />
         </div>
 
         <div class="welcome-container">

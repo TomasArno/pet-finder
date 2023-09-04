@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
+    "sync-db": "ts-node ./be-src/sync.ts",
     "dev:be": "nodemon --watch './be-src/app.ts' --exec 'ts-node ./be-src/dev.ts'",
     "dev:fe": "parcel serve ./fe-src/index.html",
     "build:be": "tsc",

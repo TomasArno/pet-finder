@@ -133,17 +133,14 @@ customElements.define(
     }
 
     render() {
-      const logoImg = require("../../images/logo.svg");
-      const menuImg = require("../../images/menu.svg");
-
       this.shadow.innerHTML = `
         <header class="header">
             <div class="header_logo-container">
-                <img class="header_logo-img" src="${logoImg}" alt="logo.svg" />
+                <img class="header_logo-img" src="https://res.cloudinary.com/dy4or1hqa/image/upload/v1693850987/logo_psgazz.svg" alt="logo.svg" />
             </div>
 
             <div class="header_menu-container">
-                <img src="${menuImg}" alt="logo.svg" />
+                <img src="https://res.cloudinary.com/dy4or1hqa/image/upload/v1693850987/menu_mh874y.svg" alt="logo.svg" />
             </div>
 
             <div class = "menu-desplegado">
@@ -152,7 +149,7 @@ customElements.define(
               <div class = "menu-desplegado__content">
                 <span><a class="menu-desplegado__item" href="/profile">Mis datos</a></span>
                 <span><a class="menu-desplegado__item" href="/lost-pets">Mis mascotas reportadas</a></span>
-                <span><a class="menu-desplegado__item" href="">Reportar mascota</a></span>
+                <span><a class="menu-desplegado__item" href="/reports">Reportar mascota</a></span>
               </div>
 
               <button class="logout-btn">Cerrar Sesion</button>

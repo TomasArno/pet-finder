@@ -51,15 +51,19 @@ export class PetController {
           lng,
         },
       });
+
+      return pet.dataValues;
     } catch (error) {
       console.log(error);
     }
-
-    return pet.dataValues;
   }
 
   static async getAllPets() {
     return Pet.findAll();
+  }
+
+  static async getById(id: number) {
+    return Pet.findByPk(id);
   }
 
   static async getMyPets(userId: string) {
