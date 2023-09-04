@@ -8,6 +8,8 @@ import { getSHA256 } from "../utilities";
 
 export const usersRouter = Router();
 
+//guardar en auth solo id y pass y cuando deshasheo el jwt y saco el id ahi puedo acceder a la tabla auth
+
 usersRouter.post("/signup", async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
     const { email, password } = req.body;

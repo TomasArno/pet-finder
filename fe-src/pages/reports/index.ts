@@ -1,9 +1,12 @@
-// import { state } from "../../state";
+import { state } from "../../state";
 
 customElements.define(
   "reports-page",
   class ReportsPage extends HTMLElement {
-    shadow = this.attachShadow({ mode: "open" });
+    petName: string;
+    lngLostPet: number;
+    latLostPet: number;
+    imageURL?: string;
 
     constructor() {
       super();
@@ -48,11 +51,18 @@ customElements.define(
         justify-content: center;
       
         position: fixed;
-      
+        overflow: scroll;
+        
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
+      }
+
+      @media (min-height: 1036px) {
+        .menu-desplegado {
+          overflow: unset;
+        }
       }
       
       .menu-desplegado__content {
@@ -114,6 +124,12 @@ customElements.define(
         border-radius: 10px;
       }
 
+      .map-control-container {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+      }
+
       .button {
         background-color: rebeccapurple;
         border-color: rebeccapurple;
@@ -125,7 +141,7 @@ customElements.define(
     }
         `;
 
-      this.shadow.appendChild(stylesEl);
+      this.appendChild(stylesEl);
     }
 
     initMap() {
@@ -137,11 +153,11 @@ customElements.define(
     }
 
     sendUbiSelected(callback) {
-      const searchBtnEl = this.shadow.querySelector(
+      const searchBtnEl = this.querySelector(
         ".search-btn"
       ) as HTMLButtonElement;
 
-      const locationInputEl = this.shadow.querySelector(
+      const locationInputEl = this.querySelector(
         ".search-input"
       ) as HTMLInputElement;
 
@@ -165,17 +181,15 @@ customElements.define(
     }
 
     menuListener() {
-      const buttonEl = this.shadow.querySelector(
+      const buttonEl = this.querySelector(
         ".open-menu-btn"
       ) as HTMLButtonElement;
 
-      const menuDesplegado = this.shadow.querySelector(
+      const menuDesplegado = this.querySelector(
         ".menu-desplegado"
       ) as HTMLDivElement;
 
-      const closeMenu = this.shadow.querySelector(
-        ".close-menu"
-      ) as HTMLDivElement;
+      const closeMenu = this.querySelector(".close-menu") as HTMLDivElement;
 
       buttonEl.addEventListener("click", (e) => {
         menuDesplegado.style.display = "flex";
@@ -189,11 +203,7 @@ customElements.define(
     }
 
     addDropzone() {
-      const dropArea = this.shadow.querySelector(
-        ".drop-area"
-      ) as HTMLDivElement;
-
-      let imageURL;
+      const dropArea = this.querySelector(".drop-area") as HTMLDivElement;
 
       const myDropzone = new Dropzone(dropArea, {
         url: "/falsa",
@@ -205,7 +215,7 @@ customElements.define(
       });
 
       myDropzone.on("thumbnail", (file) => {
-        imageURL = file.dataURL;
+        this.imageURL = file.dataURL;
       });
     }
 
@@ -218,7 +228,8 @@ customElements.define(
           .setLngLat(firstResult.geometry.coordinates)
           .addTo(map);
 
-        const [lng, lat] = firstResult.geometry.coordinates;
+        this.lngLostPet = firstResult.geometry.coordinates[0];
+        this.latLostPet = firstResult.geometry.coordinates[1];
         // fetch(`/nearby-shops?lat=${lat}&lng=${lng}`)
         //   .then((res) => res.json())
         //   .then((results) => {
@@ -233,31 +244,55 @@ customElements.define(
       });
     }
 
-    addListeners() {
-      const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
+    addFormListener() {
+      const formEl = this.querySelector(".form") as HTMLFormElement;
 
-      formEl.addEventListener("click", (e) => {
+      const publishBtnEl = this.querySelector(
+        ".publish-btn"
+      ) as HTMLButtonElement;
+
+      formEl.addEventListener("submit", (e) => {
         e.preventDefault();
       });
 
-      const publishBtnEl = this.shadow.querySelector(
-        ".publish-btn"
-      ) as HTMLButtonElement;
       publishBtnEl.addEventListener("click", async () => {
-        console.log("hola");
+        console.log(this.latLostPet, this.lngLostPet);
+        this.petName = formEl.fullname.value;
 
-        // const name = formEl.fullname.value;
-        // console.log(name);
-        // state.authFetch("/api/pets/");
+        if (
+          this.latLostPet &&
+          this.lngLostPet &&
+          this.imageURL &&
+          this.petName
+        ) {
+        }
+        this.sendData();
+      });
+    }
+
+    async sendData() {
+      const res = await state.authFetch("/api/pets", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: this.petName,
+          lat: this.latLostPet,
+          lng: this.lngLostPet,
+          imgURL: this.imageURL,
+        }),
       });
 
-      this.menuListener();
-      this.addDropzone();
-      this.addMapbox();
+      console.log("status", res.status);
+
+      const data = await res.json();
+
+      console.log("data", data);
     }
 
     render() {
-      this.shadow.innerHTML = `
+      this.innerHTML = `
         <header-comp></header-comp>
   
         <main class="main">
@@ -269,24 +304,31 @@ customElements.define(
             <h2>Reportar Mascota</h2>
             <h5 class="sub-title">Ingresá la siguiente información para realizar el reporte de la mascota</h5>
               
-            <form class="form" id="button">
-              <input class="input" type="text" name="name"/>
+            <form class="form">
+              <input placeholder="Nombre" class="input" type="text" name="fullname"/>
+              
               <div class="drop-area"></div>
+              
+              <div id="map" class="map"></div>
 
-              <input placeholder="Ubicacion" class="search-input input" name="input" type="search" />
-              <button class="search-btn button">Buscar</button>
+              <div class="map-control-container">
+                <input placeholder="Ubicacion" class="search-input input" name="input" type="search" />
+                <button class="search-btn button">Buscar</button>
+              </div>
 
-              <button form="button" class="publish-btn button">Reportar mascota</button>
+              <button type="submit" class="publish-btn button">Reportar mascota</button>
               <button class="close-menu button">Cancelar reporte</button>
             </form>
 
           </div>
         </div>
-        
         `;
 
       this.addStyles();
-      this.addListeners();
+      this.addFormListener();
+      this.menuListener();
+      this.addDropzone();
+      this.addMapbox();
     }
   }
 );

@@ -1,6 +1,6 @@
 export interface PetConfig {
   name: string;
-  area: string;
+  img: string;
   lat: number;
   lng: number;
 }

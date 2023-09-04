@@ -29,7 +29,7 @@ export class PetController {
     }
   }
 
-  static async newLostPet(petData: PetConfig) {
+  static async create(petData: PetConfig) {
     const { name, lat, lng } = petData;
 
     let pet;

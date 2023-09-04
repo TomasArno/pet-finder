@@ -5,7 +5,7 @@ export const Pet = sequelize.define("pet", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  area: {
+  imgURL: {
     type: DataTypes.STRING,
     allowNull: false,
   },
