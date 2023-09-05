@@ -1,4 +1,4 @@
-import { Router } from "@vaadin/router";
+import { Router } from "../../router";
 import { state } from "../../state";
 
 customElements.define(
@@ -77,7 +77,9 @@ customElements.define(
       ) as HTMLButtonElement;
 
       reportButtonEl.addEventListener("click", async (e) => {
-        const res = await state.authFetch("/api/users/test");
+        const res = await state.authFetch(
+          `${process.env.API_BASE_URL}/api/users/test`
+        );
 
         if (res.status == 200) {
           const data = await res.json();
@@ -92,7 +94,9 @@ customElements.define(
     }
 
     async fetchPetData() {
-      const res = await state.authFetch("api/pets/1");
+      const res = await state.authFetch(
+        `${process.env.API_BASE_URL}api/pets/1`
+      );
       const data = await res.json();
 
       const { name, imgURL } = data;

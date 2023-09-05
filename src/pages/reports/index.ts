@@ -271,18 +271,21 @@ customElements.define(
     }
 
     async sendData() {
-      const res = await state.authFetch("/api/pets", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: this.petName,
-          lat: this.latLostPet,
-          lng: this.lngLostPet,
-          imgURL: this.imageURL,
-        }),
-      });
+      const res = await state.authFetch(
+        `${process.env.API_BASE_URL}/api/pets`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: this.petName,
+            lat: this.latLostPet,
+            lng: this.lngLostPet,
+            imgURL: this.imageURL,
+          }),
+        }
+      );
 
       console.log("status", res.status);
 

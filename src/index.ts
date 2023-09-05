@@ -24,7 +24,7 @@ import "./components/card";
 import "./components/inputs";
 
 (async () => {
-  const res = await state.authFetch("/api/users/me");
+  const res = await state.authFetch(`${process.env.API_BASE_URL}/api/users/me`);
 
   if (res.status == 200) {
     const { userId } = await res.json();

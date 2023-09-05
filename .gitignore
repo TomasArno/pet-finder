@@ -2,6 +2,3 @@ node_modules
 .parcel-cache
 dist
 .env
-dev.ts
-be-dist
-sync.ts

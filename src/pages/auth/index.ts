@@ -89,7 +89,7 @@ customElements.define(
 
         e.preventDefault();
 
-        const res = await fetch(input, {
+        const res = await fetch(process.env.API_BASE_URL + input, {
           method: "post",
           headers: {
             "Content-Type": "application/json",
