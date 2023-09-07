@@ -13,7 +13,7 @@ customElements.define(
     }
 
     async connectedCallback() {
-      await this.fetchPetData();
+      // await this.fetchPetData();
       this.render();
     }
 
@@ -72,11 +72,11 @@ customElements.define(
     }
 
     addListeners() {
-      const reportButtonEl = this.shadow.querySelector(
+      const reportPetButtonEl = this.shadow.querySelector(
         ".report-button"
       ) as HTMLButtonElement;
 
-      reportButtonEl.addEventListener("click", async (e) => {
+      reportPetButtonEl.addEventListener("click", async () => {
         const res = await state.authFetch(
           `${process.env.API_BASE_URL}/api/users/test`
         );
@@ -93,18 +93,22 @@ customElements.define(
       });
     }
 
-    async fetchPetData() {
-      const res = await state.authFetch(
-        `${process.env.API_BASE_URL}api/pets/1`
-      );
-      const data = await res.json();
+    // async fetchPetData() {
+    //   const res = await state.authFetch(
+    //     `${process.env.API_BASE_URL}/api/pets/1`
+    //   );
 
-      const { name, imgURL } = data;
-      this.petName = name;
-      this.petImg = imgURL;
-    }
+    //   const data = await res.json();
+    //   const { name, imgURL } = data;
+
+    //   this.petName = name;
+    //   this.petImg = imgURL;
+    // }
 
     render() {
+      this.petName = this.getAttribute("petName");
+      this.petImg = this.getAttribute("petImg");
+
       this.shadow.innerHTML = `
       <div class="card">
         <div class ="card_img-container">

@@ -72,16 +72,22 @@ customElements.define(
       this.shadow.appendChild(stylesEl);
     }
 
+    isPageLogin() {
+      if (window.location.pathname == "/auth/login") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     addListeners() {
       const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
 
       let input: string;
 
-      if (window.location.pathname == "/auth/login") {
-        input = "/api/users/login";
-      } else {
-        input = "/api/users/signup";
-      }
+      this.isPageLogin()
+        ? (input = "/api/users/login")
+        : (input = "/api/users/signup");
 
       formEl.addEventListener("submit", async (e) => {
         const email = formEl.email.value;
@@ -114,11 +120,7 @@ customElements.define(
     render() {
       let title: string;
 
-      if (window.location.pathname == "/auth/signup") {
-        title = "Registrarse";
-      } else {
-        title = "Iniciar Sesión";
-      }
+      this.isPageLogin() ? (title = "Iniciar Sesión") : (title = "Registrarse");
 
       this.shadow.innerHTML = `        
         <main class="main">
@@ -130,11 +132,18 @@ customElements.define(
               <div class="input-container">
                 <input placeholder="Email" autocomplete="email" class="input" name="email" type="email" required />
                 <input placeholder="Contraseña" class="input" name="password" type="password" required />
+                <p class="form_signup-redirect">¿No tienes cuenta todavía? <a href="/auth/signup">Registrate</a></p>
               </div>
               <button type=submit class="submit-btn">Acceder</button>
             </form>
         </main>
       `;
+
+      const signupRedirectEl = this.shadow.querySelector(
+        ".form_signup-redirect"
+      ) as HTMLElement;
+
+      if (!this.isPageLogin()) signupRedirectEl.style.display = "none";
 
       this.addStyles();
       this.addListeners();

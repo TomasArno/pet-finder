@@ -1,3 +1,4 @@
+import { Router } from "../../router";
 import { state } from "../../state";
 
 customElements.define(
@@ -28,13 +29,21 @@ customElements.define(
         }
         
         .main {
-          padding: 80px 0;
+          padding: 28px 0;
           background-color: grey;
           height: calc(100% - 50px);
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: space-between;
+          row-gap: 20px;
+      }
+
+      .carousell {
+        overflow: scroll;
+        max-height: 84%;
+        display:flex;
+        flex-direction: column;
+        row-gap: 25px;
       }
     
       @media (min-width: 768px) {
@@ -252,7 +261,8 @@ customElements.define(
       ) as HTMLButtonElement;
 
       formEl.addEventListener("submit", (e) => {
-        e.preventDefault();
+        // e.preventDefault();
+        Router.go("/reports");
       });
 
       publishBtnEl.addEventListener("click", async () => {
@@ -287,21 +297,40 @@ customElements.define(
         }
       );
 
-      console.log("status", res.status);
+      if (res.status != 201) {
+        const { error } = await res.json();
+        return console.log(error);
+      }
 
-      const data = await res.json();
-
-      console.log("data", data);
+      const data = res.json();
+      data.then((pet) => console.log("data", pet));
     }
 
-    render() {
+    async fetchPetData() {
+      const { userId } = state.getState();
+
+      const res = await state.authFetch(
+        `${process.env.API_BASE_URL}/api/pets/${userId}`
+      );
+
+      return await res.json();
+    }
+
+    async render() {
+      const allPets = await this.fetchPetData();
+      const parsedPetArray = state.parsePetArray(allPets);
+
       this.innerHTML = `
         <header-comp></header-comp>
   
         <main class="main">
-            <h1>Mascotas Reportadas</h1>
-            <button class="open-menu-btn button">Publicar Reporte</button>
+          <h1>Mis Mascotas Reportadas</h1>
+          <div class="carousell">
+            ${parsedPetArray}
+          </div>
+          <button class="open-menu-btn button">Publicar Reporte</button>
         </main>
+
         <div class= "menu-desplegado">
           <div class= "menu-desplegado__content">
             <h2>Reportar Mascota</h2>
@@ -315,14 +344,13 @@ customElements.define(
               <div id="map" class="map"></div>
 
               <div class="map-control-container">
-                <input placeholder="Ubicacion" class="search-input input" name="input" type="search" />
-                <button class="search-btn button">Buscar</button>
+                <input type="search" placeholder="Ubicacion" class="search-input input" name="input" />
+                <input type="button" value="Buscar" class="search-btn button"/>
               </div>
 
               <button type="submit" class="publish-btn button">Reportar mascota</button>
               <button class="close-menu button">Cancelar reporte</button>
             </form>
-
           </div>
         </div>
         `;

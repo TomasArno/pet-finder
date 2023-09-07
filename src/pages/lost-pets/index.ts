@@ -1,4 +1,5 @@
 import { Router } from "../../router";
+import { state } from "../../state";
 
 customElements.define(
   "lost-page",
@@ -10,7 +11,12 @@ customElements.define(
     }
 
     connectedCallback() {
-      this.render();
+      state.suscribe(() => {
+        this.render();
+      });
+
+      const updateState = state.getState();
+      state.setState(updateState);
     }
 
     addStyles() {
@@ -61,13 +67,22 @@ customElements.define(
       //   });
     }
 
-    render() {
+    async fetchPetData() {
+      const res = await state.authFetch(`${process.env.API_BASE_URL}/api/pets`);
+
+      return await res.json();
+    }
+
+    async render() {
+      const allPets = await this.fetchPetData();
+      const parsedPetArray = state.parsePetArray(allPets);
+
       this.shadow.innerHTML = `
       <header-comp></header-comp>
       
       <main class="main">
         <div class="carousell">
-          <card-comp></card-comp>
+          ${parsedPetArray}
         </div>
       </main>
       `;

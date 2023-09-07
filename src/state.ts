@@ -1,3 +1,5 @@
+import { Router } from "./router";
+
 export const state = {
   data: {
     userId: "",
@@ -10,6 +12,7 @@ export const state = {
 
   deleteJwtTokenInLocalStorage() {
     localStorage.removeItem("token");
+    Router.go("/auth/login");
   },
 
   async authFetch(input: string, options = {}) {
@@ -28,14 +31,20 @@ export const state = {
   setState(state) {
     this.data = state;
 
-    console.log(state);
-
     for (const cb of this.listeners) {
       cb();
     }
   },
 
-  suscribe(cb: () => {}) {
+  parsePetArray(petArray) {
+    return petArray
+      .map((pet) => {
+        return `<card-comp petName='${pet.name}' petImg='${pet.imgURL}'></card-comp>`;
+      })
+      .join(" ");
+  },
+
+  suscribe(cb: () => void) {
     this.listeners.push(cb);
   },
 };

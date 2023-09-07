@@ -34,7 +34,7 @@ import "./components/inputs";
 
     Router.go("/lost-pets");
   } else {
-    Router.go("/auth/signup");
+    Router.go("/auth/login");
     state.deleteJwtTokenInLocalStorage();
   }
 })();

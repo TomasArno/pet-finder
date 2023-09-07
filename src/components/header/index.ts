@@ -1,3 +1,6 @@
+import { Router } from "../../router";
+import { state } from "../../state";
+
 customElements.define(
   "header-comp",
   class Header extends HTMLElement {
@@ -113,6 +116,10 @@ customElements.define(
         ".header_menu-container"
       ) as HTMLButtonElement;
 
+      const logoutEl = this.shadow.querySelector(
+        ".logout-btn"
+      ) as HTMLButtonElement;
+
       const menuDesplegado = this.shadow.querySelector(
         ".menu-desplegado"
       ) as HTMLDivElement;
@@ -129,6 +136,10 @@ customElements.define(
       closeMenu.addEventListener("click", () => {
         menuDesplegado.style.display = "none";
         menuEl.style.display = "inherit";
+      });
+
+      logoutEl.addEventListener("click", () => {
+        state.deleteJwtTokenInLocalStorage();
       });
     }
 
