@@ -75,7 +75,7 @@ customElements.define(
       formEl.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const userId = state.getState().userId;
+        const { userId } = state.getState();
 
         const oldPassword = formEl.oldPassword.value;
         const newPassword = formEl.newPassword.value;
@@ -94,7 +94,7 @@ customElements.define(
 
         if (res.status == 200) {
           const data = await res.json();
-          console.log(data);
+          data.then((data) => console.log(data));
           Router.go("/profile");
         }
       });

@@ -1,4 +1,5 @@
 import { Router } from "../../router";
+import { state } from "../../state";
 
 customElements.define(
   "modify-email-page",
@@ -71,11 +72,35 @@ customElements.define(
     addListeners() {
       const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
 
-      formEl.addEventListener("submit", (e) => {
+      formEl.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const oldPass = formEl.oldPassword.value; // cambiar email?
 
-        // Router.go("/how-work");
+        const { userId } = state.getState();
+        const oldEmail = formEl.oldEmail.value;
+        const newEmail = formEl.newEmail.value;
+
+        const res = await state.authFetch(
+          `${process.env.API_BASE_URL}/api/users/${userId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              oldEmail,
+              newEmail,
+            }),
+          }
+        );
+
+        if (res.status == 200) {
+          res
+            .json()
+            .then((data) => {
+              return data;
+            })
+            .then((msg) => console.log(msg));
+
+          Router.go("/profile");
+        }
       });
     }
 
@@ -88,7 +113,8 @@ customElements.define(
 
         <form class="form">
           <div class="input-container">
-            <input placeholder="Email" autocomplete="email" class="input" name="email" type="email" required />
+          <input placeholder="Anterior Email" autocomplete="email" class="input" name="oldEmail" type="email" required />
+          <input placeholder="Nuevo Email" autocomplete="email" class="input" name="newEmail" type="email" required />
           </div>
 
           <button type=submit class="submit-btn">Guardar</button>

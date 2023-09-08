@@ -29,125 +29,132 @@ customElements.define(
         }
         
         .main {
-          padding: 28px 0;
+          padding: 20px 0;
           background-color: grey;
           height: calc(100% - 50px);
           display: flex;
           flex-direction: column;
           align-items: center;
           row-gap: 20px;
-      }
+        }
 
-      .carousell {
-        overflow: scroll;
-        max-height: 84%;
-        display:flex;
-        flex-direction: column;
-        row-gap: 25px;
-      }
-    
-      @media (min-width: 768px) {
-        .header__menu-desplegable {
+        .main_titles-container {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          row-gap: 13px;
+        }
+
+        .carousell {
+          overflow: scroll;
+          height: 86%;
+          display:flex;
+          flex-direction: column;
+          row-gap: 25px;
+        }
+      
+        @media (min-width: 768px) {
+          .header__menu-desplegable {
+            display: none !important;
+          }
+        }
+        
+        .menu-desplegado {
+          background-color: rgb(1, 15, 96);
+          color: white;
+          display: none;
+
+          justify-content: center;
+        
+          position: fixed;
+          overflow: scroll;
+          
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+
+        @media (min-height: 1036px) {
+          .menu-desplegado {
+            overflow: unset;
+          }
+        }
+        
+        .menu-desplegado__content {
+          width: 70%;
+          max-width: 550px;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          row-gap: 60px;
+
+          font-size: 10px;
+          font-weight: 400;
+          text-align: center;
+          letter-spacing: 0em;
+        }
+        
+        @media (min-width: 375px) {
+          .menu-desplegado__content {
+            font-size: 25px;
+          }
+        }
+
+        .sub-title {
+          font-size: 16px;
+          width: 352px;
+        }
+
+        .form {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          row-gap: 33px;
+        }
+
+        .input {
+          padding: 0 15px;
+          height: 40px;
+          border-radius: 10px;
+          font-size: 15px;
+        }
+
+        .drop-area {
+          background: #d1d1d14f;
+          width: 100%;
+          min-height: 150px;
+          border-radius: 10px;
+        }
+
+        .dz-details, .dz-size, .dz-filename, .dz-progress, .dz-error-message, .dz-success-mark, .dz-error-mark {
           display: none !important;
         }
-      }
-      
-      .menu-desplegado {
-        background-color: rgb(1, 15, 96);
-        color: white;
-        display: none;
 
-        justify-content: center;
-      
-        position: fixed;
-        overflow: scroll;
-        
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-
-      @media (min-height: 1036px) {
-        .menu-desplegado {
-          overflow: unset;
+        .map {
+          background: #d1d1d14f;
+          width: 100%;
+          height: 250px;
+          border-radius: 10px;
         }
-      }
-      
-      .menu-desplegado__content {
-        width: 70%;
-        max-width: 550px;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        row-gap: 60px;
-
-        font-size: 10px;
-        font-weight: 400;
-        text-align: center;
-        letter-spacing: 0em;
-      }
-      
-      @media (min-width: 375px) {
-        .menu-desplegado__content {
-          font-size: 25px;
+        .map-control-container {
+          display: flex;
+          flex-direction: column;
+          row-gap: 20px;
         }
-      }
 
-      .sub-title {
-        font-size: 16px;
-        width: 352px;
+        .button {
+          background-color: rebeccapurple;
+          border-color: rebeccapurple;
+          border-radius: 10px;
+          color: rgb(255, 255, 255);
+          height: 40px;
+          width: 220px;
+          font-size: 15px;
       }
-
-      .form {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        row-gap: 33px;
-      }
-
-      .input {
-        padding: 0 15px;
-        height: 40px;
-        border-radius: 10px;
-        font-size: 15px;
-      }
-
-      .drop-area {
-        background: #d1d1d14f;
-        width: 100%;
-        min-height: 150px;
-        border-radius: 10px;
-      }
-
-      .dz-details, .dz-size, .dz-filename, .dz-progress, .dz-error-message, .dz-success-mark, .dz-error-mark {
-        display: none !important;
-      }
-
-      .map {
-        background: #d1d1d14f;
-        width: 100%;
-        height: 250px;
-        border-radius: 10px;
-      }
-
-      .map-control-container {
-        display: flex;
-        flex-direction: column;
-        row-gap: 20px;
-      }
-
-      .button {
-        background-color: rebeccapurple;
-        border-color: rebeccapurple;
-        border-radius: 10px;
-        color: rgb(255, 255, 255);
-        height: 40px;
-        width: 220px;
-        font-size: 15px;
-    }
         `;
 
       this.appendChild(stylesEl);
@@ -261,12 +268,10 @@ customElements.define(
       ) as HTMLButtonElement;
 
       formEl.addEventListener("submit", (e) => {
-        // e.preventDefault();
-        Router.go("/reports");
+        // e.preventDefault(); hacer de esto otra pagina
       });
 
       publishBtnEl.addEventListener("click", async () => {
-        console.log(this.latLostPet, this.lngLostPet);
         this.petName = formEl.fullname.value;
 
         if (
@@ -319,14 +324,26 @@ customElements.define(
     async render() {
       const allPets = await this.fetchPetData();
       const parsedPetArray = state.parsePetArray(allPets);
+      let subtitleEl = "";
+
+      if (!parsedPetArray) {
+        subtitleEl = "Aún no reportaste mascotas perdidas";
+      }
 
       this.innerHTML = `
         <header-comp></header-comp>
   
         <main class="main">
-          <h1>Mis Mascotas Reportadas</h1>
+          <div class="main_titles-container">
+            <h1>Mis Mascotas Reportadas</h1>
+            <h4 class="main_subtitle">${subtitleEl}</h4>
+          </div>
+          
           <div class="carousell">
-            ${parsedPetArray}
+            ${
+              parsedPetArray ||
+              "<img style='margin:auto' src='https://res.cloudinary.com/dy4or1hqa/image/upload/v1694145574/undraw_post_re_mtr4_1_ortb8r.svg'/>"
+            }
           </div>
           <button class="open-menu-btn button">Publicar Reporte</button>
         </main>

@@ -1,6 +1,3 @@
-import { Router } from "../../router";
-import { state } from "../../state";
-
 customElements.define(
   "card-comp",
   class Card extends HTMLElement {
@@ -12,8 +9,7 @@ customElements.define(
       super();
     }
 
-    async connectedCallback() {
-      // await this.fetchPetData();
+    connectedCallback() {
       this.render();
     }
 
@@ -28,6 +24,7 @@ customElements.define(
         }
   
         .card {
+          border-radius: 10px;
           background-color: rgb(55, 55, 55);
           width: 320px;
           height: 194px;
@@ -45,6 +42,7 @@ customElements.define(
         }
 
         .card_img {
+          border-radius: 10px 10px 0 0;
           width: 100%;
           height: 100%;
         }
@@ -76,34 +74,8 @@ customElements.define(
         ".report-button"
       ) as HTMLButtonElement;
 
-      reportPetButtonEl.addEventListener("click", async () => {
-        const res = await state.authFetch(
-          `${process.env.API_BASE_URL}/api/users/test`
-        );
-
-        if (res.status == 200) {
-          const data = await res.json();
-
-          console.log(data);
-        } else {
-          const err = await res.json();
-          console.error(err);
-          Router.go("/auth/login");
-        }
-      });
+      reportPetButtonEl.addEventListener("click", () => {});
     }
-
-    // async fetchPetData() {
-    //   const res = await state.authFetch(
-    //     `${process.env.API_BASE_URL}/api/pets/1`
-    //   );
-
-    //   const data = await res.json();
-    //   const { name, imgURL } = data;
-
-    //   this.petName = name;
-    //   this.petImg = imgURL;
-    // }
 
     render() {
       this.petName = this.getAttribute("petName");
