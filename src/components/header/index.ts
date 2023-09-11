@@ -159,7 +159,7 @@ customElements.define(
               
               <div class = "menu-desplegado__content">
                 <span><a class="menu-desplegado__item" href="/profile">Mis datos</a></span>
-                <span><a class="menu-desplegado__item" href="/lost-pets">Mis mascotas reportadas</a></span>
+                <span><a class="menu-desplegado__item" href="/lost-pets">Mascotas reportadas cercanas</a></span>
                 <span><a class="menu-desplegado__item" href="/reports">Reportar mascota</a></span>
               </div>
 

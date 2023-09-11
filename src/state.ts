@@ -3,6 +3,7 @@ import { Router } from "./router";
 export const state = {
   data: {
     userId: "",
+    email: "",
   },
   listeners: [],
 

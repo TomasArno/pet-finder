@@ -16,6 +16,7 @@ import "./pages/profile";
 import "./pages/modify-email";
 import "./pages/modify-pass";
 import "./pages/reports";
+import "./pages/form-pet";
 
 // COMPONENTS INITIALIZATION
 
@@ -27,10 +28,10 @@ import "./components/inputs";
   const res = await state.authFetch(`${process.env.API_BASE_URL}/api/users/me`);
 
   if (res.status == 200) {
-    const { userId } = await res.json();
+    const { userId, email } = await res.json();
 
     const cs = state.getState();
-    state.setState({ ...cs, userId });
+    state.setState({ ...cs, userId, email });
 
     Router.go("/lost-pets");
   } else {

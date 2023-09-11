@@ -12,6 +12,7 @@ router.setRoutes([
   { path: "/profile/email", component: "modify-email-page" },
   { path: "/profile/password", component: "modify-password-page" },
   { path: "/reports", component: "reports-page" },
+  { path: "/reports/create", component: "form-pet-page" },
 ]);
 
 export { Router };
