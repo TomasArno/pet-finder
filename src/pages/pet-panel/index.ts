@@ -2,8 +2,8 @@ import { Router } from "../../router";
 import { state } from "../../state";
 
 customElements.define(
-  "form-pet-page",
-  class FormPet extends HTMLElement {
+  "pet-panel-page",
+  class PetPanel extends HTMLElement {
     petName: string;
     lngLostPet: number;
     latLostPet: number;
@@ -44,13 +44,14 @@ customElements.define(
       }
       
       .menu_content {
+        padding: 15px 0;
         width: 70%;
         max-width: 550px;
 
         display: flex;
         flex-direction: column;
         align-items: center;
-        row-gap: 60px;
+        row-gap: 50px;
 
         font-size: 10px;
         font-weight: 400;
@@ -64,12 +65,18 @@ customElements.define(
         }
       }
 
-      .sub-title {
-        font-size: 16px;
-        width: 352px;
+      .titles-container {
+        width: 300px; 
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
       }
 
-      .form {
+      .sub-title {
+        font-size: 14px;
+      }
+
+      .fields-container {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -84,10 +91,11 @@ customElements.define(
         font-size: 15px;
       }
 
-      .drop-area {
+      .img-zone {
         background: #d1d1d14f;
         width: 100%;
         min-height: 150px;
+        max-height: 200px;
         border-radius: 10px;
       }
 
@@ -122,8 +130,8 @@ customElements.define(
     }
 
     initMap() {
-      mapboxgl.accessToken = process.env.MAPBOX_TOKEN as string;
-      return new mapboxgl.Map({
+      window.mapboxgl.accessToken = process.env.MAPBOX_TOKEN as string;
+      return new window.mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/streets-v12",
       });
@@ -159,28 +167,41 @@ customElements.define(
 
     addDropzone() {
       const dropArea = this.querySelector(".drop-area") as HTMLDivElement;
+      if (dropArea) {
+        const myDropzone = new window.Dropzone(dropArea, {
+          url: "/falsa",
+          autoProcessQueue: false,
+          maxFiles: 1,
+          addRemoveLinks: true,
+          dictRemoveFile: "Eliminar",
+          thumbnailWidth: 230,
+        });
 
-      const myDropzone = new Dropzone(dropArea, {
-        url: "/falsa",
-        autoProcessQueue: false,
-        maxFiles: 1,
-        addRemoveLinks: true,
-        dictRemoveFile: "Eliminar",
-        thumbnailWidth: 230,
-      });
-
-      myDropzone.on("thumbnail", (file) => {
-        this.imageURL = file.dataURL;
-      });
+        myDropzone.on("thumbnail", (file) => {
+          this.imageURL = file.dataURL;
+        });
+      }
     }
 
     addMapbox() {
       const map = this.initMap();
 
+      if (this.lngLostPet && this.latLostPet) {
+        const petCoords = [this.lngLostPet, this.latLostPet];
+
+        const marker = new window.mapboxgl.Marker()
+          .setLngLat(petCoords as any)
+          .addTo(map);
+
+        map.setCenter(petCoords as any);
+        map.setZoom(14);
+      }
+
       this.sendUbiSelected((results) => {
         const firstResult = results[0];
+
         if (firstResult) {
-          const marker = new mapboxgl.Marker()
+          const marker = new window.mapboxgl.Marker()
             .setLngLat(firstResult.geometry.coordinates)
             .addTo(map);
 
@@ -205,10 +226,18 @@ customElements.define(
     }
 
     async sendData() {
+      let petId = "";
+      let method = "POST";
+
+      if (window.location.pathname == "/reports/edit") {
+        petId = state.getState().petSelected.id;
+        method = "PUT";
+      }
+
       const res = await state.authFetch(
-        `${process.env.API_BASE_URL}/api/pets`,
+        `${process.env.API_BASE_URL}/api/pets/${petId}`,
         {
-          method: "post",
+          method: `${method}`,
           headers: {
             "Content-Type": "application/json",
           },
@@ -226,11 +255,21 @@ customElements.define(
         console.log(error);
       } else {
         const data = res.json();
+
         data.then((pet) => {
-          console.log("data", pet);
+          console.log(pet);
           Router.go("/reports");
         });
       }
+    }
+
+    async pullPetData() {
+      const { imgURL, name, lat, lng } = state.getState().petSelected;
+
+      this.petName = name;
+      this.imageURL = imgURL;
+      this.latLostPet = lat;
+      this.lngLostPet = lng;
     }
 
     addListeners() {
@@ -254,23 +293,43 @@ customElements.define(
           this.imageURL &&
           this.petName
         ) {
+          this.sendData();
         }
-        this.sendData();
       });
     }
 
     render() {
+      this.pullPetData();
+
+      let title = "";
+      let subTitle = "";
+      let imgZone = "";
+
+      if (window.location.pathname == "/reports/create") {
+        title = "Reportar Mascota";
+        subTitle =
+          "Ingresá la siguiente información para realizar el reporte de la mascota";
+        imgZone = "<div class='drop-area img-zone'></div>";
+      } else {
+        title = "Editar Mascota";
+        imgZone = `<img class="img-zone" src="${this.imageURL}" />`;
+      }
+
       this.innerHTML = `
           <div class= "menu">
             <div class= "menu_content">
-              <h2>Reportar Mascota</h2>
-              <h5 class="sub-title">Ingresá la siguiente información para realizar el reporte de la mascota</h5>
+              <div class="titles-container">
+                <h2>${title}</h2>
+                <h5 class="sub-title">${subTitle}</h5>
+              </div>
                 
-              <div class="form">
-                <input placeholder="Nombre" class="input-name input" type="text"/>
+              <div class="fields-container">
+                <input value="${
+                  this.petName || ""
+                }" placeholder="Nombre" class="input-name input" type="text"/>
                 
-                <div class="drop-area"></div>
-                
+                ${imgZone}
+
                 <div id="map" class="map"></div>
 
                 <div class="map-control-container">

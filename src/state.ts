@@ -4,6 +4,8 @@ export const state = {
   data: {
     userId: "",
     email: "",
+    myPets: [],
+    petSelected: {},
   },
   listeners: [],
 
@@ -37,10 +39,10 @@ export const state = {
     }
   },
 
-  parsePetArray(petArray) {
+  parsePetArray(petArray, location = "lost-pets"): string {
     return petArray
       .map((pet) => {
-        return `<card-comp petName='${pet.name}' petImg='${pet.imgURL}'></card-comp>`;
+        return `<card-comp pageLocation='${location}' petId='${pet.id}' petName='${pet.name}' petImg='${pet.imgURL}'></card-comp>`;
       })
       .join(" ");
   },

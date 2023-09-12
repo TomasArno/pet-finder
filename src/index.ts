@@ -15,8 +15,8 @@ import "./pages/lost-pets";
 import "./pages/profile";
 import "./pages/modify-email";
 import "./pages/modify-pass";
-import "./pages/reports";
-import "./pages/form-pet";
+import "./pages/my-reports";
+import "./pages/pet-panel";
 
 // COMPONENTS INITIALIZATION
 

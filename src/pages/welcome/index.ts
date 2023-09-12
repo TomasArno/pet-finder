@@ -86,9 +86,9 @@ customElements.define(
       ) as HTMLButtonElement;
 
       sendUbiBtn.addEventListener("click", async (e) => {
-        // const res = await fetch("/nearby-pets");
-        // const data = await res.json();
-        // console.log(data);
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //   const { latitude, longitude } = position.coords;
+        // });
 
         Router.go("/lost-pets");
       });

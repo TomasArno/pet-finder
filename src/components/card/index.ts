@@ -1,9 +1,14 @@
+import { Router } from "../../router";
+import { state } from "../../state";
+
 customElements.define(
   "card-comp",
   class Card extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" });
+    petId: string;
     petName: string;
     petImg: string;
+    pageLocation: string;
 
     constructor() {
       super();
@@ -69,17 +74,49 @@ customElements.define(
       this.shadow.appendChild(stylesEl);
     }
 
+    findPetSelected() {
+      const cs = state.getState();
+
+      const { myPets } = state.getState();
+
+      for (const pet of myPets) {
+        if (pet.id == this.petId) {
+          state.setState({
+            ...cs,
+            petSelected: pet,
+          });
+
+          break;
+        }
+      }
+    }
+
     addListeners() {
-      const reportPetButtonEl = this.shadow.querySelector(
+      const dynamicPetButtonEl = this.shadow.querySelector(
         ".report-button"
       ) as HTMLButtonElement;
 
-      reportPetButtonEl.addEventListener("click", () => {});
+      dynamicPetButtonEl.addEventListener("click", (e) => {
+        if (this.pageLocation == "myPets") {
+          this.findPetSelected();
+          Router.go("/reports/edit");
+        } else {
+          Router.go("/reports/create");
+        }
+      });
     }
 
     render() {
+      this.petId = this.getAttribute("petId");
       this.petName = this.getAttribute("petName");
       this.petImg = this.getAttribute("petImg");
+      this.pageLocation = this.getAttribute("pageLocation");
+
+      let reportBtnCont = "Reportar";
+
+      if (this.pageLocation == "myPets") {
+        reportBtnCont = "Editar";
+      }
 
       this.shadow.innerHTML = `
       <div class="card">
@@ -93,7 +130,7 @@ customElements.define(
             <h3>${this.petName || "Undefined"}</h3>
             <p>somewhere, Argentina</p>
           </div>
-          <button class="report-button">Reportar</button>
+          <button class="report-button">${reportBtnCont}</button>
         </div>
       </div>
         `;

@@ -71,14 +71,20 @@ customElements.define(
         `${process.env.API_BASE_URL}/api/pets/${userId}`
       );
 
-      return await res.json();
+      const data = await res.json();
+      const cs = state.getState();
+      state.setState({
+        ...cs,
+        myPets: data,
+      });
+      return data;
     }
 
     async render() {
       let subtitleEl = "";
 
       const allMyPets = await this.fetchPetData();
-      let parsedPetArray = state.parsePetArray(allMyPets);
+      let parsedPetArray = state.parsePetArray(allMyPets, "myPets");
 
       if (!parsedPetArray) {
         subtitleEl = "Aún no reportaste mascotas perdidas";
