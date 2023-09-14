@@ -4,6 +4,7 @@ export const state = {
   data: {
     userId: "",
     email: "",
+    nearbyPets: [],
     myPets: [],
     petSelected: {},
   },

@@ -23,6 +23,7 @@ import "./pages/pet-panel";
 import "./components/header";
 import "./components/card";
 import "./components/inputs";
+import "./components/send-report";
 
 (async () => {
   const res = await state.authFetch(`${process.env.API_BASE_URL}/api/users/me`);

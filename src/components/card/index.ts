@@ -4,11 +4,13 @@ import { state } from "../../state";
 customElements.define(
   "card-comp",
   class Card extends HTMLElement {
+    //#region Attributes
     shadow = this.attachShadow({ mode: "open" });
     petId: string;
     petName: string;
     petImg: string;
     pageLocation: string;
+    //#endregion
 
     constructor() {
       super();
@@ -68,8 +70,7 @@ customElements.define(
         .report-button {
           padding: 10px;
           height: 42px; 
-        }
-        `;
+        }`;
 
       this.shadow.appendChild(stylesEl);
     }
@@ -92,16 +93,31 @@ customElements.define(
     }
 
     addListeners() {
+      const cardEl = this.shadow.querySelector(".card") as HTMLDivElement;
+
       const dynamicPetButtonEl = this.shadow.querySelector(
         ".report-button"
       ) as HTMLButtonElement;
 
       dynamicPetButtonEl.addEventListener("click", (e) => {
+        this.findPetSelected();
+
         if (this.pageLocation == "myPets") {
-          this.findPetSelected();
           Router.go("/reports/edit");
         } else {
-          Router.go("/reports/create");
+          const sendAlertCompEl = document.createElement("send-alert-comp");
+          sendAlertCompEl.classList.add("send-alert");
+
+          cardEl.append(sendAlertCompEl);
+
+          const customElementSendAlert = this.shadow.querySelector(
+            ".send-alert"
+          ) as HTMLElement;
+
+          const menuEl = customElementSendAlert.shadowRoot
+            .childNodes[1] as HTMLElement;
+
+          menuEl.style.display = "flex";
         }
       });
     }
@@ -114,9 +130,7 @@ customElements.define(
 
       let reportBtnCont = "Reportar";
 
-      if (this.pageLocation == "myPets") {
-        reportBtnCont = "Editar";
-      }
+      if (this.pageLocation == "myPets") reportBtnCont = "Editar";
 
       this.shadow.innerHTML = `
       <div class="card">
@@ -132,8 +146,7 @@ customElements.define(
           </div>
           <button class="report-button">${reportBtnCont}</button>
         </div>
-      </div>
-        `;
+      </div>`;
 
       this.addStyles();
       this.addListeners();
