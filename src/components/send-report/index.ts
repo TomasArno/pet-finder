@@ -75,6 +75,15 @@ customElements.define(
       this.shadow.append(stylesEl);
     }
 
+    sendEmail() {
+      const { petSelected } = state.getState();
+
+      const res = state.authFetch(
+        `${process.env.API_BASE_URL}/api/pets/${petSelected.id}/report`
+      );
+      res.then((data) => data.json()).then((algo) => console.log(algo));
+    }
+
     addListeners() {
       const closeBtnEl = this.shadow.querySelector(
         ".close-panel"
@@ -84,7 +93,14 @@ customElements.define(
         this.style.display = "none";
       });
 
-      console.log(state.getState());
+      const publishBtnEl = this.shadow.querySelector(
+        ".publish-btn"
+      ) as HTMLButtonElement;
+
+      publishBtnEl.addEventListener("click", () => {
+        this.sendEmail();
+        this.style.display = "none";
+      });
     }
 
     render() {
@@ -97,9 +113,7 @@ customElements.define(
         <div class= "scrolldown-menu_content">
           <button type="submit" class="publish-btn button">Envíar aviso</button>
         </div>
-      </div>
-      
-        `;
+      </div>`;
       this.addStyles();
       this.addListeners();
     }

@@ -4,7 +4,6 @@ export const state = {
   data: {
     userId: "",
     email: "",
-    nearbyPets: [],
     myPets: [],
     petSelected: {},
   },
@@ -26,6 +25,17 @@ export const state = {
       options["headers"]["Authorization"] = `bearer ${savedToken}`;
     }
     return await fetch(input, options);
+  },
+
+  deleteState() {
+    for (const prop in this.data) {
+      this.data[prop] = "";
+    }
+  },
+
+  logOut() {
+    this.deleteJwtTokenInLocalStorage();
+    this.deleteState();
   },
 
   getState() {

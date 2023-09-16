@@ -8,8 +8,8 @@
     "start": "parcel"
   },
   "dependencies": {
-    "parcel": "2.9.3",
-    "@vaadin/router": "1.7.5"
+    "@vaadin/router": "1.7.5",
+    "parcel": "2.9.3"
   },
   "devDependencies": {
     "@types/dropzone": "5.7.4",

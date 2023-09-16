@@ -139,7 +139,7 @@ customElements.define(
       });
 
       logoutEl.addEventListener("click", () => {
-        state.deleteJwtTokenInLocalStorage();
+        state.logOut();
       });
     }
 
