@@ -43,22 +43,29 @@ customElements.define(
         }
       }
 
+      .close-panel {
+        padding: 0 6px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+      }
+
       h2 {
         font-size: 20px;
       }
-      
-      .scrolldown-menu_content {
-      
+
+      .form{
         display: flex;
         flex-direction: column;
-        align-items: center;
-        row-gap: 10px;
+        row-gap: 23px;
       }
-      
-      @media (min-width: 375px) {
-        .menu_content {
-          font-size: 25px;
-        }
+
+      .input {
+        padding: 0 15px;
+        height: 40px;
+        border-radius: 10px;
+        font-size: 15px;
       }
 
       .button {
@@ -75,11 +82,22 @@ customElements.define(
       this.shadow.append(stylesEl);
     }
 
-    sendEmail() {
+    sendEmail(petData: {
+      fullname: string;
+      phoneNumber: string;
+      description: string;
+    }) {
       const { petSelected } = state.getState();
 
       const res = state.authFetch(
-        `${process.env.API_BASE_URL}/api/pets/${petSelected.id}/report`
+        `${process.env.API_BASE_URL}/api/pets/${petSelected.id}/report`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...petData,
+          }),
+        }
       );
       res.then((data) => data.json()).then((algo) => console.log(algo));
     }
@@ -93,12 +111,16 @@ customElements.define(
         this.style.display = "none";
       });
 
-      const publishBtnEl = this.shadow.querySelector(
-        ".publish-btn"
-      ) as HTMLButtonElement;
+      const formEl = this.shadow.querySelector(".form") as HTMLFormElement;
 
-      publishBtnEl.addEventListener("click", () => {
-        this.sendEmail();
+      formEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.sendEmail({
+          fullname: formEl.fullname.value,
+          phoneNumber: formEl.phoneNumber.value,
+          description: formEl.description.value,
+        });
+
         this.style.display = "none";
       });
     }
@@ -106,13 +128,14 @@ customElements.define(
     render() {
       this.shadow.innerHTML = `  
       <div class= "scrolldown-menu">
+        <div class="close-panel">X</div>      
         <h2>Reportar mascota</h2>
-        <div class="close-panel">X</div>
-
-      
-        <div class= "scrolldown-menu_content">
-          <button type="submit" class="publish-btn button">Envíar aviso</button>
-        </div>
+        <form class="form" id ="form">
+          <input placeholder="Nombre" type="text" class="input" name="fullname" required/>
+          <input placeholder="Teléfono" type="number" class="input" name="phoneNumber" required/>
+          <textarea placeholder="¿Dónde lo viste?" class="input" name="description" required></textarea>
+        </form>
+        <button form="form" type="submit" class="publish-btn button">Envíar aviso</button>
       </div>`;
       this.addStyles();
       this.addListeners();
