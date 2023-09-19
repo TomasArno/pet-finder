@@ -33,12 +33,31 @@ customElements.define(
           row-gap: 13px;
         }
 
+        @media (min-width: 1023px) {
+          .main_titles-container {
+            font-size: 15px;
+          }
+        }
+
         .carousell {
           overflow: scroll;
+          overflow-x: hidden;
+          width: 100%;
           height: 86%;
           display:flex;
           flex-direction: column;
+          align-items: center;
           row-gap: 25px;
+        }
+
+        @media (min-width: 1023px) {
+          .carousell {
+            flex-wrap: wrap;
+            flex-direction: row;
+            column-gap: 25px;
+            justify-content: center;
+            align-items: flex-start;
+          }
         }
         
         .button {
@@ -49,7 +68,17 @@ customElements.define(
           height: 40px;
           width: 220px;
           font-size: 15px;
-      }`;
+      }
+      
+      @media (min-width: 1023px) {
+        .button {
+          height: 55px;
+          width: 250px;
+          font-size: 20px;
+        }
+      }
+      
+      `;
 
       this.appendChild(stylesEl);
     }
@@ -73,10 +102,12 @@ customElements.define(
 
       const data = await res.json();
       const cs = state.getState();
+
       state.setState({
         ...cs,
         myPets: data,
       });
+
       return data;
     }
 

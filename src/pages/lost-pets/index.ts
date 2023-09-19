@@ -1,4 +1,3 @@
-import { Router } from "../../router";
 import { state } from "../../state";
 
 customElements.define(
@@ -11,12 +10,7 @@ customElements.define(
     }
 
     connectedCallback() {
-      // state.suscribe(() => {
-      // });
       this.render();
-
-      // const updateState = state.getState();
-      // state.setState(updateState);
     }
 
     addStyles() {
@@ -31,21 +25,48 @@ customElements.define(
       }
       
       .main {
+        padding: 20px 0;
         background-color: grey;
         height: calc(100% - 50px);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        row-gap: 20px;
+      }
+
+      .main_titles-container {
+        font-size: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        row-gap: 13px;
+      }
+
+      @media (min-height: 1500px) {
+        .main_titles-container {
+          font-size: 30px;
+        }
       }
       
       .carousell {
+        width: 100%;
         height: 95%;
         display:flex;
         flex-direction: column;
+        align-items: center;
         row-gap: 25px;
         overflow: scroll;
-        
+        overflow-x: hidden;
+      }
+
+      @media (min-width: 1023px) {
+        .carousell {
+          flex-wrap: wrap;
+          flex-direction: row;
+          column-gap: 25px;
+          justify-content: center;
+          align-items: flex-start;
+        }
       }
       `;
 
@@ -56,7 +77,9 @@ customElements.define(
 
     async fetchPetData() {
       const cs = state.getState();
-      const res = await state.authFetch(`${process.env.API_BASE_URL}/api/pets`);
+      const res = await state.authFetch(
+        `${process.env.API_BASE_URL}/api/pets/-34.603736/-58.381632`
+      );
 
       const petsArr = await res.json();
 
@@ -69,17 +92,29 @@ customElements.define(
     }
 
     async render() {
+      let subtitleEl = "";
+
       const allPets = await this.fetchPetData();
       const parsedPetArray = state.parsePetArray(allPets);
+
+      if (!parsedPetArray) {
+        subtitleEl = "Aún no reportaste mascotas perdidas";
+      }
 
       this.shadow.innerHTML = `
       <header-comp></header-comp>
       
       <main class="main">
-        <div class="carousell">
-          ${parsedPetArray}
+        <div class="main_titles-container">
+              <h1>Mascotas Perdidas Cercanas</h1>
+              <h4 class="main_subtitle">${subtitleEl}</h4>
         </div>
-        
+        <div class="carousell">
+        ${
+          parsedPetArray ||
+          "<img style='margin:auto' src='https://res.cloudinary.com/dy4or1hqa/image/upload/v1694145574/undraw_post_re_mtr4_1_ortb8r.svg'/>"
+        }
+        </div>
       </main>
       `;
 

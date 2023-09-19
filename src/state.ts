@@ -51,11 +51,13 @@ export const state = {
   },
 
   parsePetArray(petArray, location = "lost-pets"): string {
-    return petArray
-      .map((pet) => {
-        return `<card-comp pageLocation='${location}' petId='${pet.id}' petName='${pet.name}' petImg='${pet.imgURL}'></card-comp>`;
-      })
-      .join(" ");
+    return !petArray
+      ? ""
+      : petArray
+          .map((pet) => {
+            return `<card-comp pageLocation='${location}' petId='${pet.id}' petName='${pet.name}' petImg='${pet.imgURL}'></card-comp>`;
+          })
+          .join(" ");
   },
 
   suscribe(cb: () => void) {

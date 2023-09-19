@@ -57,7 +57,7 @@ customElements.define(
         left: 0;
         right: 0;
 
-        justify-content: space-around;
+        justify-content: center;
         flex-direction: column;
         align-items: center;
       }
@@ -71,14 +71,20 @@ customElements.define(
         right: 10px;
         font-size: 20px;
       }
+
+      @media (min-width: 1023px) {
+        .close-menu {
+          font-size: 30px;
+        }
+      }
       
-      .menu-desplegado__content {
+      .menu-desplegado_content {
         width: 264px;
 
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        row-gap: 60px;
+        align-items: center;
+        row-gap: 100px;
 
         font-size: 10px;
         font-weight: 400;
@@ -87,12 +93,26 @@ customElements.define(
       }
       
       @media (min-width: 375px) {
-        .menu-desplegado__content {
+        .menu-desplegado_content {
           font-size: 25px;
         }
       }
+
+      @media (min-width: 1023px) {
+        .menu-desplegado_content {
+          font-size: 33px;
+          row-gap: 200px;
+        }
+      }
+
+      .item-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        row-gap: 60px;
+      }
       
-      .menu-desplegado__item {
+      .menu-desplegado_item {
         color: rgb(255, 255, 254);
         text-decoration: none;
       }
@@ -104,6 +124,14 @@ customElements.define(
         color: rgb(255, 255, 255);
         height: 40px;
         width: 220px;
+      }
+
+      @media (min-width: 1023px) {
+        .logout-btn {
+          height: 55px;
+          width: 250px;
+          font-size: 20px;
+        }
       }
       
       `;
@@ -157,14 +185,14 @@ customElements.define(
             <div class = "menu-desplegado">
               <span class="close-menu">X</span>
               
-              <div class = "menu-desplegado__content">
-                <span><a class="menu-desplegado__item" href="/profile">Mis datos</a></span>
-                <span><a class="menu-desplegado__item" href="/lost-pets">Mascotas reportadas cercanas</a></span>
-                <span><a class="menu-desplegado__item" href="/reports">Reportar mascota</a></span>
+              <div class = "menu-desplegado_content">
+                <div class="item-container">
+                  <span><a class="menu-desplegado_item" href="/profile">Mis datos</a></span>
+                  <span><a class="menu-desplegado_item" href="/lost-pets">Mascotas reportadas cercanas</a></span>
+                  <span><a class="menu-desplegado_item" href="/reports">Reportar mascota</a></span>
+                </div>
+                <button class="logout-btn">Cerrar Sesion</button>
               </div>
-
-              <button class="logout-btn">Cerrar Sesion</button>
-
             </div>
         </header>
       `;

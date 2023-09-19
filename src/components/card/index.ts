@@ -43,9 +43,22 @@ customElements.define(
           row-gap: 5px;
         }
 
+        @media (min-width: 1023px) {
+          .card {
+            width: 400px;
+            height: 250px;
+          }
+        }
+
         .card_img-container {
           width: 100%;
           height: 140px;
+        }
+
+        @media (min-width: 1023px) {
+          .card_img-container {
+            height: 196px;
+          }
         }
 
         .card_img {
@@ -67,10 +80,15 @@ customElements.define(
           font-size: 27px;
         }
 
-        .report-button {
-          padding: 10px;
-          height: 42px; 
-        }`;
+        .button {
+          background-color: rebeccapurple;
+          border-color: rebeccapurple;
+          border-radius: 10px;
+          color: rgb(255, 255, 255);
+          height: 40px;
+          width: 35%;
+          font-size: 15px;
+      }`;
 
       this.shadow.appendChild(stylesEl);
     }
@@ -96,7 +114,7 @@ customElements.define(
       const cardEl = this.shadow.querySelector(".card") as HTMLDivElement;
 
       const dynamicPetButtonEl = this.shadow.querySelector(
-        ".report-button"
+        ".button"
       ) as HTMLButtonElement;
 
       dynamicPetButtonEl.addEventListener("click", (e) => {
@@ -144,7 +162,7 @@ customElements.define(
             <h3>${this.petName || "Undefined"}</h3>
             <p>somewhere, Argentina</p>
           </div>
-          <button class="report-button">${reportBtnCont}</button>
+          <button class="button">${reportBtnCont}</button>
         </div>
       </div>`;
 
