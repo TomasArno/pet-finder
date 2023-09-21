@@ -1,4 +1,5 @@
 import { Router } from "../../router";
+import { State } from "../../state";
 
 customElements.define(
   "welcome-page",
@@ -70,6 +71,15 @@ customElements.define(
         color: rgb(255, 255, 255);
         height: 40px;
         width: 220px;
+        font-size: 15px;
+      }
+      
+      @media (min-width: 1023px) {
+        .button {
+          height: 55px;
+          width: 250px;
+          font-size: 20px;
+        }
       }
       `;
 
@@ -85,13 +95,10 @@ customElements.define(
         ".how-work"
       ) as HTMLButtonElement;
 
-      sendUbiBtn.addEventListener("click", async (e) => {
-        // navigator.geolocation.getCurrentPosition((position) => {
-        //   const { latitude, longitude } = position.coords;
-        // });
-
-        Router.go("/lost-pets");
+      sendUbiBtn.addEventListener("click", (e) => {
+        State.getCurrentLocation(() => Router.go("/auth/login"));
       });
+
       howWorkBtn.addEventListener("click", (e) => {
         Router.go("/how-work");
       });
@@ -115,7 +122,7 @@ customElements.define(
           <div class="comps-container">
             <button class="send-ubi button">Dar mi ubicación actual</button>
           </div>
-          <button class="how-work button">¿Cómo funciona Pet Finder?</button>
+          <button class="how-work button">¿Cómo funciona?</button>
         </div>
       </main>
       `;

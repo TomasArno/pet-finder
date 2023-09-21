@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "reports-page",
@@ -68,14 +68,14 @@ customElements.define(
           height: 40px;
           width: 220px;
           font-size: 15px;
-      }
-      
-      @media (min-width: 1023px) {
-        .button {
-          height: 55px;
-          width: 250px;
-          font-size: 20px;
         }
+        
+        @media (min-width: 1023px) {
+          .button {
+            height: 55px;
+            width: 250px;
+            font-size: 20px;
+          }
       }
       
       `;
@@ -94,19 +94,19 @@ customElements.define(
     }
 
     async fetchPetData() {
-      const { userId } = state.getState();
+      const { userId } = State.getState;
 
-      const res = await state.authFetch(
+      const res = await State.authFetch(
         `${process.env.API_BASE_URL}/api/pets/${userId}`
       );
 
       const data = await res.json();
-      const cs = state.getState();
+      const cs = State.getState;
 
-      state.setState({
+      State.setState = {
         ...cs,
         myPets: data,
-      });
+      };
 
       return data;
     }
@@ -115,7 +115,10 @@ customElements.define(
       let subtitleEl = "";
 
       const allMyPets = await this.fetchPetData();
-      let parsedPetArray = state.parsePetArray(allMyPets, "myPets");
+
+      console.log(allMyPets);
+
+      let parsedPetArray = State.parsePetArray(allMyPets, "myPets");
 
       if (!parsedPetArray) {
         subtitleEl = "Aún no reportaste mascotas perdidas";

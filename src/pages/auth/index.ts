@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "auth-page",
@@ -108,11 +108,22 @@ customElements.define(
 
         if (res.status == 201 || res.status == 200) {
           const { token } = await res.json();
-          console.log(token);
+          State.setJwtTokenInLocalStorage(token);
 
-          state.setJwtTokenInLocalStorage(token);
+          const response = await State.authFetch(
+            `${process.env.API_BASE_URL}/api/users/me`
+          );
+          const cs = State.getState;
 
-          Router.go("/lost-pets");
+          if (response.status == 200) {
+            const { userId, email } = await response.json();
+
+            State.setState = { ...cs, userId, email };
+
+            Router.go("/lost-pets");
+          } else {
+            Router.go("/auth/login");
+          }
         }
       });
     }

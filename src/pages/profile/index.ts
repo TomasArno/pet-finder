@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "profile-page",
@@ -77,7 +77,7 @@ customElements.define(
       });
 
       logoutBtnEl.addEventListener("click", (e) => {
-        state.deleteJwtTokenInLocalStorage();
+        State.deleteUserInfo();
         Router.go("/");
       });
     }

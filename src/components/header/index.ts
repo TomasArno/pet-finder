@@ -1,5 +1,4 @@
-import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "header-comp",
@@ -167,7 +166,7 @@ customElements.define(
       });
 
       logoutEl.addEventListener("click", () => {
-        state.logOut();
+        State.deleteUserInfo();
       });
     }
 

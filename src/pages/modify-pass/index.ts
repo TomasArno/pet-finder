@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "modify-password-page",
@@ -75,12 +75,12 @@ customElements.define(
       formEl.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const { userId } = state.getState();
+        const { userId } = State.getState;
 
         const oldPassword = formEl.oldPassword.value;
         const newPassword = formEl.newPassword.value;
 
-        const res = await state.authFetch(
+        const res = await State.authFetch(
           `${process.env.API_BASE_URL}/api/users/${userId}`,
           {
             method: "PUT",
@@ -93,7 +93,7 @@ customElements.define(
         );
 
         if (res.status == 200) {
-          const data = await res.json();
+          const data = res.json();
           data.then((data) => console.log(data));
           Router.go("/profile");
         }

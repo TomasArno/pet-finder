@@ -1,4 +1,4 @@
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "lost-page",
@@ -76,17 +76,25 @@ customElements.define(
     addListeners() {}
 
     async fetchPetData() {
-      const cs = state.getState();
-      const res = await state.authFetch(
-        `${process.env.API_BASE_URL}/api/pets/-34.603736/-58.381632`
+      const cs = State.getState;
+
+      const [lat, lng] = cs.currentPosition;
+
+      const res = await State.authFetch(
+        `${process.env.API_BASE_URL}/api/pets/${lat}/${lng}`
       );
+
+      if (res.status != 200) {
+        res.json().then((data) => console.log(data));
+        return null;
+      }
 
       const petsArr = await res.json();
 
-      state.setState({
+      State.setState = {
         ...cs,
         myPets: petsArr,
-      });
+      };
 
       return petsArr;
     }
@@ -95,7 +103,7 @@ customElements.define(
       let subtitleEl = "";
 
       const allPets = await this.fetchPetData();
-      const parsedPetArray = state.parsePetArray(allPets);
+      const parsedPetArray = State.parsePetArray(allPets);
 
       if (!parsedPetArray) {
         subtitleEl = "Aún no reportaste mascotas perdidas";

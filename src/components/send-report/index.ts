@@ -1,4 +1,4 @@
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "send-alert-comp",
@@ -87,9 +87,9 @@ customElements.define(
       phoneNumber: string;
       description: string;
     }) {
-      const { petSelected } = state.getState();
+      const { petSelected } = State.getState;
 
-      const res = state.authFetch(
+      const res = State.authFetch(
         `${process.env.API_BASE_URL}/api/pets/${petSelected.id}/report`,
         {
           method: "POST",

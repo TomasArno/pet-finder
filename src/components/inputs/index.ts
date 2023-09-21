@@ -1,5 +1,3 @@
-import { state } from "../../state";
-
 customElements.define(
   "inputs-comp",
   class Card extends HTMLElement {

@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "modify-email-page",
@@ -75,11 +75,11 @@ customElements.define(
       formEl.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const { userId } = state.getState();
+        const { userId } = State.getState;
         const oldEmail = formEl.oldEmail.value;
         const newEmail = formEl.newEmail.value;
 
-        const res = await state.authFetch(
+        const res = await State.authFetch(
           `${process.env.API_BASE_URL}/api/users/${userId}`,
           {
             method: "PUT",

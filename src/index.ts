@@ -4,7 +4,7 @@ import { Router } from "./router";
 
 // STATE INITIALIZATION
 
-import { state } from "./state";
+import { State } from "./state";
 
 // PAGES INITIALIZATION
 
@@ -26,17 +26,19 @@ import "./components/inputs";
 import "./components/send-report";
 
 (async () => {
-  const res = await state.authFetch(`${process.env.API_BASE_URL}/api/users/me`);
+  Router.go("/");
+
+  const res = await State.authFetch(`${process.env.API_BASE_URL}/api/users/me`);
+
+  const cs = State.getState;
 
   if (res.status == 200) {
     const { userId, email } = await res.json();
 
-    const cs = state.getState();
-    state.setState({ ...cs, userId, email });
-
-    Router.go("/lost-pets");
+    State.setState = { ...cs, userId, email };
+    State.getCurrentLocation(() => Router.go("/lost-pets"));
   } else {
-    Router.go("/auth/login");
-    state.deleteJwtTokenInLocalStorage();
+    State.deleteUserInfo();
+    Router.go("/");
   }
 })();

@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "card-comp",
@@ -94,16 +94,16 @@ customElements.define(
     }
 
     findPetSelected() {
-      const cs = state.getState();
+      const cs = State.getState;
 
-      const { myPets } = state.getState();
+      const { myPets } = State.getState;
 
       for (const pet of myPets) {
-        if (pet.id == this.petId) {
-          state.setState({
+        if (pet["id"] == this.petId) {
+          State.setState = {
             ...cs,
             petSelected: pet,
-          });
+          };
 
           break;
         }

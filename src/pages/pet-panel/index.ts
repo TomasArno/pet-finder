@@ -1,5 +1,5 @@
 import { Router } from "../../router";
-import { state } from "../../state";
+import { State } from "../../state";
 
 customElements.define(
   "pet-panel-page",
@@ -208,15 +208,6 @@ customElements.define(
           this.lngLostPet = firstResult.geometry.coordinates[0];
           this.latLostPet = firstResult.geometry.coordinates[1];
 
-          // fetch(`/nearby-shops?lat=${lat}&lng=${lng}`)
-          //   .then((res) => res.json())
-          //   .then((results) => {
-          //     for (const shop of results) {
-          //       const { lat, lng } = shop._geoloc;
-          //       new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-          //     }
-          // });
-
           map.setCenter(firstResult.geometry.coordinates);
           map.setZoom(14);
         } else {
@@ -230,11 +221,11 @@ customElements.define(
       let method = "POST";
 
       if (window.location.pathname == "/reports/edit") {
-        petId = state.getState().petSelected.id;
+        petId = State.getState.petSelected["id"];
         method = "PUT";
       }
 
-      const res = await state.authFetch(
+      const res = await State.authFetch(
         `${process.env.API_BASE_URL}/api/pets/${petId}`,
         {
           method: `${method}`,
@@ -250,7 +241,7 @@ customElements.define(
         }
       );
 
-      if (res.status != 201) {
+      if (res.status != 200 && res.status != 201) {
         const { error } = await res.json();
         console.log(error);
       } else {
@@ -264,7 +255,7 @@ customElements.define(
     }
 
     async pullPetData() {
-      const { imgURL, name, lat, lng } = state.getState().petSelected;
+      const { imgURL, name, lat, lng } = State.getState.petSelected;
 
       this.petName = name;
       this.imageURL = imgURL;
