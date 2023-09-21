@@ -9,7 +9,6 @@ import { State } from "./state";
 // PAGES INITIALIZATION
 
 import "./pages/welcome";
-import "./pages/how-works";
 import "./pages/auth";
 import "./pages/lost-pets";
 import "./pages/profile";

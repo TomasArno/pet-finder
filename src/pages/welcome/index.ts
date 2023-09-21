@@ -91,16 +91,8 @@ customElements.define(
         ".send-ubi"
       ) as HTMLButtonElement;
 
-      const howWorkBtn = this.shadow.querySelector(
-        ".how-work"
-      ) as HTMLButtonElement;
-
       sendUbiBtn.addEventListener("click", (e) => {
         State.getCurrentLocation(() => Router.go("/auth/login"));
-      });
-
-      howWorkBtn.addEventListener("click", (e) => {
-        Router.go("/how-work");
       });
     }
 
@@ -122,7 +114,6 @@ customElements.define(
           <div class="comps-container">
             <button class="send-ubi button">Dar mi ubicación actual</button>
           </div>
-          <button class="how-work button">¿Cómo funciona?</button>
         </div>
       </main>
       `;

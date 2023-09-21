@@ -216,6 +216,29 @@ customElements.define(
       });
     }
 
+    async deleteReport() {
+      const petId = State.getState.petSelected["id"];
+
+      const res = await State.authFetch(
+        `${process.env.API_BASE_URL}/api/pets/${petId}`,
+        {
+          method: "delete",
+        }
+      );
+
+      if (res.status != 200) {
+        const { error } = await res.json();
+        console.log(error);
+      } else {
+        const data = res.json();
+
+        data.then((pet) => {
+          console.log(pet);
+          Router.go("/reports");
+        });
+      }
+    }
+
     async sendData() {
       let petId = "";
       let method = "POST";
@@ -266,6 +289,13 @@ customElements.define(
     addListeners() {
       const closeMenuEl = this.querySelector(".close-menu") as HTMLDivElement;
       const inputNameEl = this.querySelector(".input-name") as HTMLInputElement;
+      const deleteReportBtn = this.querySelector(
+        ".delete-btn"
+      ) as HTMLButtonElement;
+
+      if (window.location.pathname == "/reports/create") {
+        deleteReportBtn.style.display = "none";
+      }
 
       const publishBtnEl = this.querySelector(
         ".publish-btn"
@@ -286,6 +316,10 @@ customElements.define(
         ) {
           this.sendData();
         }
+      });
+
+      deleteReportBtn.addEventListener("click", () => {
+        this.deleteReport();
       });
     }
 
@@ -329,6 +363,7 @@ customElements.define(
                 </div>
 
                 <button type="submit" class="publish-btn button">Reportar mascota</button>
+                <button class="delete-btn button">Eliminar reporte</button>
                 <button class="close-menu button">Cancelar reporte</button>
               </div>
             </div>

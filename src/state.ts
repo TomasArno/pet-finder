@@ -37,6 +37,7 @@ export abstract class State {
   static deleteUserInfo() {
     this.deleteJwtTokenInLocalStorage();
     this.deleteState();
+    Router.go("/");
   }
 
   static getCurrentLocation(cb?: () => void) {
