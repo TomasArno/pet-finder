@@ -130,8 +130,21 @@ customElements.define(
 
     render() {
       let title: string;
+      let redirectBtn: string;
+      let hrefContent: string;
+      let urlHref: string;
 
-      this.isPageLogin() ? (title = "Iniciar Sesión") : (title = "Registrarse");
+      if (this.isPageLogin()) {
+        title = "Iniciar Sesión";
+        redirectBtn = "¿No tienes cuenta todavía?";
+        hrefContent = "Registrate";
+        urlHref = "/auth/signup";
+      } else {
+        title = "Registrarse";
+        redirectBtn = "¿Ya tienes una cuenta?";
+        hrefContent = "Inicia Sesión";
+        urlHref = "/auth/login";
+      }
 
       this.shadow.innerHTML = `        
         <main class="main">
@@ -143,18 +156,12 @@ customElements.define(
               <div class="input-container">
                 <input placeholder="Email" autocomplete="email" class="input" name="email" type="email" required />
                 <input placeholder="Contraseña" class="input" name="password" type="password" required />
-                <p class="form_signup-redirect">¿No tienes cuenta todavía? <a href="/auth/signup">Registrate</a></p>
+                <p class="form_signup-redirect">${redirectBtn} <a href="${urlHref}">${hrefContent}</a></p>
               </div>
               <button type=submit class="submit-btn">Acceder</button>
             </form>
         </main>
       `;
-
-      const signupRedirectEl = this.shadow.querySelector(
-        ".form_signup-redirect"
-      ) as HTMLElement;
-
-      if (!this.isPageLogin()) signupRedirectEl.style.display = "none";
 
       this.addStyles();
       this.addListeners();
